@@ -1,0 +1,54 @@
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background: white;
+  color: black;
+}
+header {
+  background-color: #6c2eb8;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+.logo {
+  width: 120px;
+}
+.cta {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: black;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+.pricing {
+  padding: 2rem;
+  background: #f4f4f4;
+}
+.plans {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.plan {
+  background: white;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 300px;
+}
+.plan.pro {
+  border-color: #6c2eb8;
+}
+.founder {
+  padding: 2rem;
+  text-align: center;
+}
+.founder-img {
+  width: 200px;
+  border-radius: 50%;
+}
