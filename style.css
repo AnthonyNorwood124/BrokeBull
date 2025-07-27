@@ -72,6 +72,19 @@ body {
     width: 100%;
     border-radius: 50%;
 }
+.testimonial {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.testimonial: hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+.testimonial:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(108, 46, 184, 0.5); /* purple glow */
+}
 .founder {
     padding: 40px 20px;
     text-align: center;
