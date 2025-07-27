@@ -51,6 +51,27 @@ body {
     text-decoration: none;
     margin-top: 10px;
 }
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #1e1e1e;
+  padding: 20px;
+  margin: 10px;
+  border: 1px solid #6c2eb8;
+}
+.card: hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(108, 46, 184, 0.5); /* Purple glow */
+  border-color: #fff;
+}
+.card .btn {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.card .btn:hover {
+  background-color: #6c2eb8;
+  transform: scale(1.05);
+}
 .testimonials {
     padding: 40px 20px;
     background-color: #000;
