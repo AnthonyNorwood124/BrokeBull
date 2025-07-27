@@ -1,0 +1,82 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+header {
+    text-align: center;
+    background: #6a0dad;
+    padding: 40px 20px;
+}
+.logo {
+    height: 80px;
+}
+.cta-button {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+.cta-button:hover {
+    transform: scale(1.05);
+}
+section {
+    padding: 40px 20px;
+    text-align: center;
+}
+.pricing {
+    background: #1c1c1c;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+.pricing-box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 10px;
+    width: 300px;
+    background-color: #fff;
+    color: #000;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+.pricing-box:hover {
+    transform: scale(1.05);
+}
+.testimonials {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+.testimonial {
+    margin: 20px;
+    padding: 10px;
+    max-width: 200px;
+    text-align: center;
+}
+.testimonial img {
+    width: 100%;
+    border-radius: 50%;
+}
+.hover-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+}
+footer {
+    text-align: center;
+    padding: 40px 20px;
+}
+.founder-photo {
+    max-height: 300px;
+    width: auto;
+    border-radius: 10px;
+}
