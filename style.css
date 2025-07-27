@@ -68,7 +68,7 @@ body {
 .card .btn {
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
-.card .btn:hover {
+.card .btn: hover {
   background-color: #6c2eb8;
   transform: scale(1.05);
 }
@@ -102,7 +102,7 @@ body {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
-.testimonial:hover {
+.testimonial: hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(108, 46, 184, 0.5); /* purple glow */
 }
@@ -113,4 +113,23 @@ body {
 .founder-photo {
     width: 300px;
     border-radius: 10px;
+}
+.founder {
+  text-align: center;
+  padding: 50px 20px;
+  background-color: #000; /* optional, adjust to fit your theme */
+}
+.founder-photo {
+  width: 180px;
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(108, 46, 184, 0.4);
+}
+.founder-bio p {
+  color: #ccc;
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1rem;
+  line-height: 1.6;
 }
