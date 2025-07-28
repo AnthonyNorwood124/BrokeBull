@@ -26,7 +26,7 @@ body::before {
     width: 100px;
 }
 .cta {
-    display: inline-block;
+    display:inline-block;
     background-color: #000;
     color: #fff;
     padding: 10px 20px;
@@ -34,17 +34,17 @@ body::before {
     text-decoration: none;
 }
 .what-we-do {
-    padding: 40px 20px;
+    padding:40px 20px;
     background-size: cover;
     text-align: center;
 }
 .pricing {
-    padding: 40px 20px;
+    padding:40px 20px;
     background-color: #111;
     text-align: center;
 }
 .card-container {
-    display: flex;
+    display:flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
@@ -60,7 +60,7 @@ body::before {
     border: 1px solid #6c2eb8;
     overflow: hidden;
 }
-.card: hover {
+.card:hover {
     transform: translateY(-8px) scale(1.02);
     box-shadow: 0 10px 25px rgba(108, 46, 184, 0.5); /* Purple glow */
     border-color: #fff;
@@ -76,7 +76,7 @@ body::before {
     border-radius: 6px;
     transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
 }
-.card .btn: hover {
+.card .btn:hover {
     background-color: #6A0DAD;
     color: #fff;
     transform: scale(1.05);
@@ -105,7 +105,7 @@ body::before {
     width: 100%;
     border-radius: 50%;
 }
-.testimonial: hover {
+.testimonial:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(108, 46, 184, 0.5); /* purple glow */
 }
