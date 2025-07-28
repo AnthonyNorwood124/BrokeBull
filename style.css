@@ -13,9 +13,9 @@ body::before {
     height: 100%;
     background: url('images/candlesticks.png') no-repeat center center;
     background-size: cover;
-    opacity: 0.08; /* Adjust transparency */
+    opacity: 0.08;
     z-index: -1;
-    pointer-events: none; /* So it's not clickable */
+    pointer-events: none;
 }
 .hero {
     text-align: center;
