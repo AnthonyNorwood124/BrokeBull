@@ -17,9 +17,16 @@ body::before {
     z-index: -1;
     pointer-events: none;
 }
+.hero,
+.pricing,
+.testimonials,
+.founder {
+    position: relative;
+    z-index: 1;
+}
 .hero {
     text-align: center;
-    background-color: #6A0DAD;
+    background-color: rgba(106, 13, 173, 0.85);
     padding: 40px 20px;
 }
 .logo {
@@ -40,7 +47,7 @@ body::before {
 }
 .pricing {
     padding:40px 20px;
-    background-color: #111;
+    background-color: rgba(17, 17, 17, 0.85);
     text-align: center;
 }
 .card-container {
@@ -62,13 +69,13 @@ body::before {
 }
 .card:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 10px 25px rgba(108, 46, 184, 0.5); /* Purple glow */
+    box-shadow: 0 10px 25px rgba(108, 46, 184, 0.5);
     border-color: #fff;
 }
 .card .btn {
     display: inline-block;
-    background-color: #fff; /* White background */
-    color: #6A0DAD; /* BrokeBull purple text */
+    background-color: #fff;
+    color: #6A0DAD;
     padding: 10px 20px;
     text-decoration: none;
     margin-top: 10px;
@@ -83,7 +90,7 @@ body::before {
 }
 .testimonials {
     padding: 40px 20px;
-    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.85);
     text-align: center;
 }
 .testimonial-row {
@@ -107,13 +114,12 @@ body::before {
 }
 .testimonial:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(108, 46, 184, 0.5); /* purple glow */
+    box-shadow: 0 8px 20px rgba(108, 46, 184, 0.5);
 }
-
 .founder {
     padding: 50px 20px;
     text-align: center;
-    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.85);
 }
 .founder-photo {
     width: 180px;
