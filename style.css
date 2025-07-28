@@ -4,14 +4,17 @@ body {
     color: #fff;
     background-color: #000;
 }
+
 .hero {
     text-align: center;
     background-color: #6A0DAD;
     padding: 40px 20px;
 }
+
 .logo {
     width: 100px;
 }
+
 .cta {
     display: inline-block;
     background-color: #000;
@@ -20,112 +23,113 @@ body {
     margin-top: 20px;
     text-decoration: none;
 }
+
 .what-we-do {
     padding: 40px 20px;
     background-size: cover;
     text-align: center;
 }
+
 .pricing {
     padding: 40px 20px;
     background-color: #111;
     text-align: center;
 }
+
 .card-container {
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
 }
+
 .card {
-  background-color: #fff;
-  color: #000;
-  padding: 20px;
-  width: 250px;
-  border-radius: 10px;
-  margin: 10px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #6c2eb8;
-  overflow: hidden;
+    background-color: #fff;
+    color: #000;
+    padding: 20px;
+    width: 250px;
+    border-radius: 10px;
+    margin: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #6c2eb8;
+    overflow: hidden;
 }
+
 .card: hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 10px 25px rgba(108, 46, 184, 0.5); /* Purple glow */
-  border-color: #fff;
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(108, 46, 184, 0.5); /* Purple glow */
+    border-color: #fff;
 }
+
 .card .btn {
-  display: inline-block;
-  background-color: #fff; /* White background */
-  color: #6A0DAD; /* BrokeBull purple text */
-  padding: 10px 20px;
-  text-decoration: none;
-  margin-top: 10px;
-  border: 2px solid #6A0DAD;
-  border-radius: 6px;
-  transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+    display: inline-block;
+    background-color: #fff; /* White background */
+    color: #6A0DAD; /* BrokeBull purple text */
+    padding: 10px 20px;
+    text-decoration: none;
+    margin-top: 10px;
+    border: 2px solid #6A0DAD;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
 }
-.card .btn:hover {
-  background-color: #6A0DAD;
-  color: #fff;
-  transform: scale(1.05);
+
+.card .btn: hover {
+    background-color: #6A0DAD;
+    color: #fff;
+    transform: scale(1.05);
 }
+
 .testimonials {
     padding: 40px 20px;
     background-color: #000;
     text-align: center;
 }
+
 .testimonial-row {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
 }
+
 .testimonial {
     background-color: #111;
     padding: 10px;
     border: 1px solid #6A0DAD;
     width: 200px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .testimonial img {
     width: 100%;
     border-radius: 50%;
 }
-.testimonial {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 8px;
-  overflow: hidden;
-}
+
 .testimonial: hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(108, 46, 184, 0.5); /* purple glow */
 }
-.testimonial: hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(108, 46, 184, 0.5); /* purple glow */
-}
+
 .founder {
-    padding: 40px 20px;
+    padding: 50px 20px;
     text-align: center;
+    background-color: #000;
 }
+
 .founder-photo {
-    width: 300px;
-    border-radius: 10px;
+    width: 180px;
+    height: auto;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(108, 46, 184, 0.4);
 }
-.founder {
-  text-align: center;
-  padding: 50px 20px;
-  background-color: #000; /* optional, adjust to fit your theme */
-}
-.founder-photo {
-  width: 180px;
-  height: auto;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 5px 15px rgba(108, 46, 184, 0.4);
-}
+
 .founder-bio p {
-  color: #ccc;
-  max-width: 600px;
-  margin: 0 auto;
-  font-size: 1rem;
-  line-height: 1.6;
+    color: #ccc;
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 1rem;
+    line-height: 1.6;
 }
