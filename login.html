@@ -2,31 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>BrokeBull — Login</title>
+  <title>Login to BrokeBull</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" /> <!-- or style.css if that's your file -->
 
-  <!-- Optional: change to "style.css" if that's your file name -->
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Firebase (Compat for simplicity on static hosting) -->
+  <!-- Firebase (compat builds for static hosting) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="firebase.js"></script>
+
+  <!-- Your firebase config + auth helpers (see section 2) -->
+  <script src="firebase.js" defer></script>
+
+  <style>
+    /* Minimal layout so it’s usable while you style it */
+    body { background:#000; color:#fff; font-family:Arial, sans-serif; margin:0 }
+    .wrap { max-width:420px; margin:60px auto; padding:24px; background:#111; border:1px solid #2b2b2b; border-radius:12px }
+    h1 { margin:0 0 16px 0; font-size:22px }
+    label { display:block; font-size:12px; margin:14px 0 6px }
+    input { width:100%; padding:10px 12px; border-radius:8px; border:1px solid #444; background:#0b0b0b; color:#fff }
+    .row { display:flex; gap:8px; margin-top:14px }
+    button { flex:1; padding:10px 12px; border-radius:8px; border:1px solid #6c2eb8; background:#6c2eb8; color:#fff; cursor:pointer }
+    button.secondary { background:#111; color:#6c2eb8 }
+    .hint { margin-top:10px; font-size:12px }
+    .hint a { color:#6c2eb8; text-decoration:none }
+    .error { margin-top:10px; color:#ff6b6b; font-size:12px; min-height:18px }
+  </style>
 </head>
-<body class="auth">
-  <h2>Login to BrokeBull</h2>
+<body>
 
-  <div class="auth-card">
-    <input type="email" id="email" placeholder="Email" autocomplete="email" />
-    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
+  <div class="wrap">
+    <h1>Login to BrokeBull</h1>
 
-    <button onclick="login()">Sign In</button>
-    <button class="secondary" onclick="signup()">Create Account</button>
+    <label for="email">Email</label>
+    <input id="email" type="email" placeholder="you@example.com" autocomplete="email" />
 
-    <p id="msg"></p>
+    <label for="password">Password</label>
+    <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+
+    <div class="row">
+      <button type="button" onclick="signIn()">Sign In</button>
+      <button type="button" class="secondary" onclick="createAccount()">Create Account</button>
+    </div>
+
+    <div class="hint">Forgot your password?
+      <a href="#" onclick="resetPassword();return false;">Reset it</a>
+    </div>
+
+    <div id="message" class="error"></div>
   </div>
 
-  <p class="tiny">Forgot your password? <a href="#" onclick="reset()">Reset it</a></p>
 </body>
 </html>
+
