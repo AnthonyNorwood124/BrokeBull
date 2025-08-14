@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>BrokeBull — Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Optional: change to "style.css" if that's your file name -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Firebase (Compat for simplicity on static hosting) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+</head>
+<body class="auth">
+  <h2>Login to BrokeBull</h2>
+
+  <div class="auth-card">
+    <input type="email" id="email" placeholder="Email" autocomplete="email" />
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
+
+    <button onclick="login()">Sign In</button>
+    <button class="secondary" onclick="signup()">Create Account</button>
+
+    <p id="msg"></p>
+  </div>
+
+  <p class="tiny">Forgot your password? <a href="#" onclick="reset()">Reset it</a></p>
+</body>
+</html>
