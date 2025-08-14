@@ -53,40 +53,42 @@ document.addEventListener('DOMContentLoaded', () => {
       setStatus(err.message, true);
     }
   });
- // Create account
-  createBtn?.addEventListener('click', async () => {
-    try {
-      setStatus('Creating account…');
-      const email = emailEl.value.trim();
-      const pass  = passEl.value;
-      if (!email || !pass) throw new Error('Enter email and password.');
-      const cred = await auth.createUserWithEmailAndPassword(email, pass);
-      // Create a basic role doc for the user
-      await db.collection('users').doc(cred.user.uid).set({
-        email,
-        role: 'basic',                // default role
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      setStatus('Account created! Redirecting…');
-      window.location.href = 'dashboard.html';
-    } catch (err) {
-      console.error(err);
-      setStatus(err.message, true);
+/* --- firebase.js: Create Account handler (replace your old one) --- */
+createBtn?.addEventListener('click', async () => {
+  const email = emailEl.value.trim();
+  const pass  = passEl.value;
+ try {
+    setStatus('Creating account…');
+    if (!email || !pass) throw new Error('Enter email and password.');
+    // Persist session across tabs/browser restarts
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    // Create the user
+    const { user } = await auth.createUserWithEmailAndPassword(email, pass);
+    // Kick off Firestore write IN THE BACKGROUND (do not block redirect)
+    db.collection('users').doc(user.uid).set({
+      email,
+      role: 'basic',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(err => {
+      console.warn('Firestore profile write failed (non-blocking):', err);
+    });
+    // Force redirect immediately to dashboard
+    setStatus('Account created! Redirecting…');
+    // Use replace() so back button doesn't return to the form
+    window.location.replace('./dashboard.html');
+  } catch (err) {
+    console.error(err);
+    // Nice messages for common auth errors
+    if (err.code === 'auth/email-already-in-use') {
+      setStatus('That email is already in use. Try Sign In.', true);
+    } else if (err.code === 'auth/weak-password') {
+      setStatus('Password should be at least 6 characters.', true);
+    } else if (err.code === 'auth/invalid-email') {
+      setStatus('Please enter a valid email address.', true);
+    } else {
+      setStatus(err.message || 'Sign up failed.', true);
     }
-  });
-  // Password reset
-  resetLink?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    try {
-      const email = emailEl.value.trim();
-      if (!email) throw new Error('Enter your email first.');
-      await auth.sendPasswordResetEmail(email);
-      setStatus('Reset email sent! Check your inbox.');
-    } catch (err) {
-      console.error(err);
-      setStatus(err.message, true);
-    }
-  });
+  }
 });
 /* 
 Exported functions for dashboard.html (if you kept those there)
