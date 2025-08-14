@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>BrokeBull — Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Optional: change to "style.css" if that's your file name -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Firebase (Compat for static hosting) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <img class="logo" src="images/logo.jpg" alt="BrokeBull" />
+    <h1>Welcome to BrokeBull</h1>
+    <div>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <!-- PRO: hidden by default; shown when Firestore users/{uid}.role === 'pro' -->
+  <section id="proContent" style="display:none;">
+    <h2>Pro Dashboard</h2>
+    <ul>
+      <li>Full Stage-2 Watchlist</li>
+      <li>Daily Market Insights</li>
+      <li>Weekly Pro Newsletter</li>
+    </ul>
+    <!-- Add your real Pro modules/components here -->
+  </section>
+
+  <!-- BASIC: visible by default; hidden when role === 'pro' -->
+  <section id="basicContent">
+    <h2>Basic Access</h2>
+    <p>You're in preview mode. Upgrade to unlock the full Pro experience.</p>
+    <button class="btn" onclick="upgradePro()">Join Pro ($19/mo)</button>
+  </section>
+
+  <script>
+    // Render gating when the page loads (defined in firebase.js)
+    if (typeof renderDashboard === 'function') {
+      renderDashboard();
+    } else {
+      console.error('renderDashboard() not found. Ensure firebase.js is loaded.');
+    }
+  </script>
+</body>
+</html>
