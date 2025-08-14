@@ -1,6 +1,5 @@
-// firebase.js
-
-// 1) Your Firebase project config — replace with your actual keys
+/* firebase.js */
+// 1) Your Firebase project config
 const firebaseConfig = {
   apiKey: "AIzaSyC9Hyz2elP8APMTXJsG0_LGW7mRY5Q4FUU",
   authDomain: "brokebull-2ed34.firebaseapp.com",
@@ -9,70 +8,127 @@ const firebaseConfig = {
   messagingSenderId: "228477100804",
   appId: "1:228477100804:web:19c7d99dafda20822be651"
 };
- // (optional) storageBucket, messagingSenderId, appId if you use them
+  // Optional but recommended if you use Storage / Messaging / etc:
+  // storageBucket: "YOUR_STORAGE_BUCKET",
+  // messagingSenderId: "YOUR_MSG_SENDER_ID",
+  appId:         "YOUR_APP_ID",
 };
- // 2) Init Firebase
+// 2) Init
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.firestore();
-// 3) Helpers
-function showMessage(text) {
-  const el = document.getElementById('message');
-  if (el) el.textContent = text || '';
+// Helper to show messages
+function setStatus(msg, isError = false) {
+  const el = document.getElementById('status');
+  if (!el) return;
+  el.textContent = msg || '';
+  el.style.color = isError ? '#ff6b6b' : '#ffdf6e';
 }
-function getCreds() {
-  const email = (document.getElementById('email')?.value || '').trim();
-  const password = document.getElementById('password')?.value || '';
-  return { email, password };
-}
-// 4) Auth actions (attach to window so onclick works)
-window.signIn = async function signIn() {
-  showMessage('');
-  const { email, password } = getCreds();
-  if (!email || !password) return showMessage('Enter email and password.');
-  try {
-    await auth.signInWithEmailAndPassword(email, password);
+// 3) Redirect if already signed in
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    // already logged in → go to dashboard
     window.location.href = 'dashboard.html';
-  } catch (err) {
-    showMessage(err.message);
-    console.error(err);
   }
-};
-window.createAccount = async function createAccount() {
-  showMessage('');
-  const { email, password } = getCreds();
-  if (!email || !password) return showMessage('Enter email and password (min 6 chars).');
+});
+// 4) Wire up UI after DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  const emailEl = document.getElementById('email');
+  const passEl  = document.getElementById('password');
+  const signInBtn  = document.getElementById('signInBtn');
+  const createBtn  = document.getElementById('createBtn');
+  const resetLink  = document.getElementById('resetLink');
+ // Sign in
+  signInBtn?.addEventListener('click', async () => {
+    try {
+      setStatus('Signing in…');
+      const email = emailEl.value.trim();
+      const pass  = passEl.value;
+      if (!email || !pass) throw new Error('Enter email and password.');
+      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      await auth.signInWithEmailAndPassword(email, pass);
+      // onAuthStateChanged will redirect
+    } catch (err) {
+      console.error(err);
+      setStatus(err.message, true);
+    }
+  });
+ // Create account
+  createBtn?.addEventListener('click', async () => {
+    try {
+      setStatus('Creating account…');
+      const email = emailEl.value.trim();
+      const pass  = passEl.value;
+      if (!email || !pass) throw new Error('Enter email and password.');
+      const cred = await auth.createUserWithEmailAndPassword(email, pass);
+      // Create a basic role doc for the user
+      await db.collection('users').doc(cred.user.uid).set({
+        email,
+        role: 'basic',                // default role
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      setStatus('Account created! Redirecting…');
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      console.error(err);
+      setStatus(err.message, true);
+    }
+  });
+  // Password reset
+  resetLink?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    try {
+      const email = emailEl.value.trim();
+      if (!email) throw new Error('Enter your email first.');
+      await auth.sendPasswordResetEmail(email);
+      setStatus('Reset email sent! Check your inbox.');
+    } catch (err) {
+      console.error(err);
+      setStatus(err.message, true);
+    }
+  });
+});
+/* 
+Exported functions for dashboard.html (if you kept those there)
+You may already have these in your dashboard code; if not, they can live here.
+*/
+window.logout = async function logout() {
   try {
-    const cred = await auth.createUserWithEmailAndPassword(email, password);
- // Create/merge user profile in Firestore with default role
-    await db.collection('users').doc(cred.user.uid).set({
-      email,
-      role: 'basic',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }, { merge: true });
- window.location.href = 'dashboard.html';
+    await auth.signOut();
+    window.location.href = 'login.html';
   } catch (err) {
-    showMessage(err.message);
     console.error(err);
+    setStatus(err.message, true);
   }
 };
-window.resetPassword = async function resetPassword() {
-  showMessage('');
-  const { email } = getCreds();
-  if (!email) return showMessage('Enter your email first.');
- try {
-    await auth.sendPasswordResetEmail(email);
-    showMessage('Password reset email sent. Check your inbox.');
+window.renderDashboard = async function renderDashboard() {
+  const user = auth.currentUser;
+  if (!user) {
+    // Not signed in → go to login
+    window.location.href = 'login.html';
+    return;
+  }
+  try {
+    // Get role
+    const snap = await db.collection('users').doc(user.uid).get();
+    const role = snap.exists ? (snap.data().role || 'basic') : 'basic';
+ // Toggle sections
+    const pro = document.getElementById('proContent');
+    const basic = document.getElementById('basicContent');
+    if (role === 'pro') {
+      if (pro) pro.style.display = 'block';
+      if (basic) basic.style.display = 'none';
+    } else {
+      if (pro) pro.style.display = 'none';
+      if (basic) basic.style.display = 'block';
+    }
   } catch (err) {
-    showMessage(err.message);
     console.error(err);
+    // Optional status UI on dashboard
   }
 };
-// Optional: protect dashboard by redirecting if logged out.
-// Put this guard in dashboard.html or here and call it there:
-// window.requireAuth = function() {
-//   auth.onAuthStateChanged(user => {
-//     if (!user) window.location.href = 'login.html';
-//   });
-// };
+window.upgradePro = function upgradePro() {
+  // Swap for your real Stripe link
+  window.location.href = 'https://buy.stripe.com/test_1234567890';
+};
 
