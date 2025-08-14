@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>BrokeBull — Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase Compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <img class="logo" src="images/logo.jpg" alt="BrokeBull" />
+    <h1>BrokeBull — Pro</h1>
+    <div>
+      <a class="btn" href="index.html">Home</a>
+      <a class="btn" href="dashboard.html">Dashboard</a>
+      <a class="btn" href="basic.html">Basic</a>
+      <button class="btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div id="loading" style="color:#bbb;text-align:center;margin:24px 0;">Loading…</div>
+
+  <main id="content" class="container" style="max-width:1100px;margin:0 auto;padding:20px;display:none;">
+    <!-- Pro gets everything Basic has -->
+    <section>
+      <h2>Market Overview</h2>
+      <div class="tradingview-widget-container" style="height:520px;">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+        {
+          "colorTheme": "dark",
+          "dateRange": "12M",
+          "showChart": true,
+          "locale": "en",
+          "width": "100%",
+          "height": "500",
+          "isTransparent": false,
+          "tabs": [
+            {
+              "title": "US Stocks",
+              "symbols": [
+                {"s": "NASDAQ:AAPL"}, {"s": "NASDAQ:NVDA"}, {"s": "NASDAQ:TSLA"},
+                {"s": "NASDAQ:MSFT"}, {"s": "NYSE:PLTR"}, {"s": "NYSE:SHOP"}
+              ]
+            }
+          ]
+        }
+        </script>
+      </div>
+    </section>
+
+    <section>
+      <h2>Market News</h2>
+      <div class="tradingview-widget-container" style="height:520px;">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+        {
+          "feedMode": "all_symbols",
+          "isTransparent": false,
+          "displayMode": "regular",
+          "width": "100%",
+          "height": "500",
+          "colorTheme": "dark",
+          "locale": "en"
+        }
+        </script>
+      </div>
+    </section>
+
+    <section>
+      <h2>Economic Calendar</h2>
+      <div class="tradingview-widget-container" style="height:520px;">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+        {
+          "width": "100%",
+          "height": "500",
+          "locale": "en",
+          "importanceFilter": "-1,0,1",
+          "colorTheme": "dark",
+          "isTransparent": false
+        }
+        </script>
+      </div>
+    </section>
+
+    <!-- Pro-only: Founder Q&A (Formspree endpoint you shared earlier) -->
+    <section>
+      <h2>Founder Q&A</h2>
+      <p>Submit questions for Tony’s weekly Q&A.</p>
+      <form action="https://formspree.io/f/xnnveoor" method="POST" class="qa-form">
+        <input type="email" name="email" placeholder="Your email" required />
+        <textarea name="question" placeholder="Ask your question…" rows="4" required></textarea>
+        <button type="submit" class="btn">Submit Question</button>
+      </form>
+    </section>
+
+    <!-- Pro-only: Stage 2 Algo Watchlist (static for now; can wire JSON later) -->
+    <section>
+      <h2>Stage-2 Algo Watchlist</h2>
+      <ul class="watchlist">
+        <li><strong>TSLA</strong> — Breakout watch above recent base; volume expansion signal</li>
+        <li><strong>SMCI</strong> — Pullback to 21EMA; look for reversal confirmation</li>
+        <li><strong>NVDA</strong> — Flag forming; relative strength intact</li>
+        <li><strong>PLTR</strong> — Retest of prior breakout area; risk-managed entries only</li>
+      </ul>
+      <p class="tiny">Want this driven by a JSON file in the repo (editable without code)? Say the word and I’ll wire the fetch.</p>
+    </section>
+
+    <!-- Pro-only: Upgrades / Downgrades (manual for now) -->
+    <section>
+      <h2>Price Target Changes (Upgrades/Downgrades)</h2>
+      <table class="table">
+        <thead><tr><th>Symbol</th><th>Firm</th><th>Action</th><th>From</th><th>To</th><th>Date</th></tr></thead>
+        <tbody>
+          <tr><td>MSFT</td><td>Example Capital</td><td>Upgrade</td><td>Hold</td><td>Buy</td><td>2025-08-01</td></tr>
+          <tr><td>TSLA</td><td>Alpha Bank</td><td>Downgrade</td><td>Buy</td><td>Hold</td><td>2025-08-02</td></tr>
+        </tbody>
+      </table>
+      <p class="tiny">We can automate this later via a webhook/API; starting manual keeps ops simple.</p>
+    </section>
+  </main>
+
+  <script>
+    // Require auth + role === 'pro'. If not pro, send to basic with upgrade CTA.
+    document.addEventListener('DOMContentLoaded', () => {
+      const auth = firebase.auth();
+      const db   = firebase.firestore();
+
+      const loading = document.getElementById('loading');
+      const content = document.getElementById('content');
+
+      auth.onAuthStateChanged(async (user) => {
+        if (!user) {
+          window.location.replace('login.html');
+          return;
+        }
+        try {
+          const snap = await db.collection('users').doc(user.uid).get();
+          const role = snap.exists && snap.data().role ? snap.data().role : 'basic';
+
+          if (role !== 'pro') {
+            window.location.replace('basic.html?upgrade=1');
+            return;
+          }
+          if (loading) loading.style.display = 'none';
+          if (content) content.style.display = 'block';
+        } catch (err) {
+          console.error(err);
+          window.location.replace('basic.html');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
