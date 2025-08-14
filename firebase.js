@@ -145,8 +145,10 @@ window.renderDashboard = async function renderDashboard() {
   }
 };
 
+// firebase.js
 window.upgradePro = function upgradePro() {
-  // Replace with your live Stripe Checkout link
-  window.location.href = 'https://buy.stripe.com/test_1234567890';
+  // Temporary: send users straight to the dashboard
+  window.location.href = 'dashboard.html';
 };
+
 
