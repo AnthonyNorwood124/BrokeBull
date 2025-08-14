@@ -43,7 +43,157 @@
     <h2>Basic Access</h2>
     <p>You're in preview mode. Upgrade to unlock the full Pro experience.</p>
     <button class="btn" onclick="upgradePro()">Join Pro ($19/mo)</button>
-  </section>
+  <!-- ===== BASIC (Free) ===== -->
+<section id="basicContent" class="dash-section">
+  <div class="container">
+    <h2>Basic Access</h2>
+
+    <!-- 2-column grid -->
+    <div class="grid-2">
+      <!-- Trending Stocks -->
+      <article class="panel">
+        <h3>Trending Stocks</h3>
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-hotlists.js" async>
+          {
+            "colorTheme": "dark",
+            "dateRange": "1D",
+            "exchange": "US",
+            "showChart": true,
+            "locale": "en",
+            "isTransparent": true,
+            "largeChartUrl": "",
+            "width": "100%",
+            "height": 420
+          }
+          </script>
+        </div>
+      </article>
+
+      <!-- Market News -->
+      <article class="panel">
+        <h3>Market News</h3>
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+          {
+            "feedMode": "market",
+            "market": "stock",
+            "isTransparent": true,
+            "displayMode": "regular",
+            "width": "100%",
+            "height": 420,
+            "colorTheme": "dark",
+            "locale": "en"
+          }
+          </script>
+        </div>
+      </article>
+
+      <!-- Newsletter -->
+      <article class="panel">
+        <h3>BrokeBull Newsletter</h3>
+        <p>Get our weekly briefings and watchlists sent to your inbox.</p>
+        <a class="btn btn-primary" target="_blank" rel="noopener"
+           href="https://newsletter.brokebullinvestments.com/subscribe">Subscribe</a>
+      </article>
+
+      <!-- Economic Calendar -->
+      <article class="panel">
+        <h3>Weekly Economic Calendar</h3>
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+          {
+            "colorTheme": "dark",
+            "isTransparent": true,
+            "width": "100%",
+            "height": 420,
+            "locale": "en",
+            "importanceFilter": "-1,0,1"   /* show low/med/high importance */
+          }
+          </script>
+        </div>
+      </article>
+    </div>
+
+    <div class="panel" style="margin-top:16px;">
+      <p>Want everything? Unlock the full Pro experience.</p>
+      <button class="btn btn-outline" onclick="upgradePro()">Join Pro ($19/mo)</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRO (Gated) ===== -->
+<section id="proContent" class="dash-section" style="display:none;">
+  <div class="container">
+    <h2>Pro Dashboard</h2>
+
+    <div class="grid-2">
+      <!-- Stage 2 Algo Watchlist (static sample rows – replace with live data later) -->
+      <article class="panel">
+        <h3>Stage 2 Algo Watchlist</h3>
+        <table class="watchlist">
+          <thead>
+            <tr>
+              <th>Ticker</th><th>Name</th><th>Setup</th><th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="watchlistBody">
+            <tr><td>TBD</td><td>Example Corp</td><td>Breakout</td><td>Above 50/200MA, volume rising</td></tr>
+            <tr><td>TBD</td><td>Momentum Co</td><td>Pullback</td><td>Watching for higher low</td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <!-- Upgrades/Downgrades (placeholder list) -->
+      <article class="panel">
+        <h3>Daily Upgrades & Downgrades</h3>
+        <ul class="ratings-list" id="ratingsList">
+          <li><strong>ABC</strong> — Upgrade to Buy (Broker X)</li>
+          <li><strong>XYZ</strong> — Downgrade to Hold (Broker Y)</li>
+          <li><strong>MNO</strong> — Price Target ↑ to 85</li>
+        </ul>
+        <p class="note">Tip: We can wire this to a Google Sheet or Firestore later.</p>
+      </article>
+
+      <!-- Founder Q&A -->
+      <article class="panel">
+        <h3>Founder Q&A</h3>
+        <p>Ask Tony anything about setups, risk, or thesis.</p>
+        <a class="btn btn-outline" target="_blank" rel="noopener"
+           href="https://docs.google.com/forms/">Submit a Question</a>
+      </article>
+
+      <!-- Market Overview (extra widget for Pro) -->
+      <article class="panel">
+        <h3>Market Overview</h3>
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+          {
+            "colorTheme": "dark",
+            "dateRange": "1D",
+            "showChart": true,
+            "locale": "en",
+            "isTransparent": true,
+            "width": "100%",
+            "height": 420,
+            "tabs": [
+              { "title": "Indices", "symbols": [
+                { "s":"FOREXCOM:SPXUSD", "d":"S&P 500" },
+                { "s":"FOREXCOM:NSXUSD", "d":"Nasdaq 100" },
+                { "s":"FOREXCOM:DJI", "d":"Dow 30" }
+              ]}
+            ]
+          }
+          </script>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
 
   <script>
     // IMPORTANT:
