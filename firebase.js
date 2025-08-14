@@ -1,46 +1,55 @@
 /* firebase.js */
 
-// 1) Firebase project config (fixed: no duplicate/stray properties)
+/* 1) Firebase project config */
 const firebaseConfig = {
   apiKey: "AIzaSyC9Hyz2elP8APMTXJsG0_LGW7mRY5Q4FUU",
   authDomain: "brokebull-2ed34.firebaseapp.com",
   projectId: "brokebull-2ed34",
-  storageBucket: "brokebull-2ed34.firebasestorage.app",
+  storageBucket: "brokebull-2ed34.appspot.com", // <- correct bucket name
   messagingSenderId: "228477100804",
   appId: "1:228477100804:web:19c7d99dafda20822be651"
 };
 
-// 2) Init (avoid double-init if scripts are bundled elsewhere)
+/* 2) Init (avoid double-init) */
 if (!firebase.apps?.length) {
   firebase.initializeApp(firebaseConfig);
 }
 const auth = firebase.auth();
 const db   = firebase.firestore();
 
-// Helper to show messages
+/* Helpers */
 function setStatus(msg, isError = false) {
   const el = document.getElementById('status');
   if (!el) return;
   el.textContent = msg || '';
   el.style.color = isError ? '#ff6b6b' : '#ffdf6e';
 }
+function getNextUrl(def = 'dashboard.html') {
+  try {
+    const url = new URL(window.location.href);
+    const nxt = url.searchParams.get('next');
+    // Prevent open redirects: only allow local relative targets
+    if (nxt && !/^https?:/i.test(nxt)) return nxt;
+  } catch (_) {}
+  return def;
+}
 
-// 3) Redirect if already signed in (acts as a safety net)
+/* 3) If already signed in and user is on login page → go to dashboard/next */
 auth.onAuthStateChanged((user) => {
   if (user && /login\.html$/i.test(location.pathname)) {
-    window.location.href = 'dashboard.html';
+    window.location.href = getNextUrl();
   }
 });
 
-// 4) Wire up UI after DOM is ready
+/* 4) Wire up login page UI (if present) */
 document.addEventListener('DOMContentLoaded', () => {
-  const emailEl  = document.getElementById('email');
-  const passEl   = document.getElementById('password');
+  const emailEl   = document.getElementById('email');
+  const passEl    = document.getElementById('password');
   const signInBtn = document.getElementById('signInBtn');
   const createBtn = document.getElementById('createBtn');
   const resetLink = document.getElementById('resetLink');
 
-  // --- Sign in ---
+  // Sign in
   signInBtn?.addEventListener('click', async () => {
     try {
       setStatus('Signing in…');
@@ -49,26 +58,26 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!email || !pass) throw new Error('Enter email and password.');
       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       await auth.signInWithEmailAndPassword(email, pass);
-      // onAuthStateChanged will redirect
+      // onAuthStateChanged will redirect, but we can also proactively do it:
+      window.location.href = getNextUrl();
     } catch (err) {
       console.error(err);
       setStatus(err.message, true);
     }
   });
 
-  // --- Create Account (redirect immediately on success) ---
+  // Create Account
   createBtn?.addEventListener('click', async () => {
-    const email = emailEl.value.trim();
-    const pass  = passEl.value;
-
     try {
       setStatus('Creating account…');
+      const email = emailEl.value.trim();
+      const pass  = passEl.value;
       if (!email || !pass) throw new Error('Enter email and password.');
 
       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const { user } = await auth.createUserWithEmailAndPassword(email, pass);
 
-      // Firestore write (non-blocking)
+      // Non-blocking user profile write
       db.collection('users').doc(user.uid).set({
         email,
         role: 'basic',
@@ -78,8 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       setStatus('Account created! Redirecting…');
-      window.location.replace('./dashboard.html'); // immediate redirect
-
+      window.location.replace(getNextUrl()); // immediate redirect
     } catch (err) {
       console.error(err);
       if (err.code === 'auth/email-already-in-use') {
@@ -94,11 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- Password reset ---
+  // Password reset
   resetLink?.addEventListener('click', async (e) => {
     e.preventDefault();
     try {
-      const email = emailEl.value.trim();
+      const email = emailEl?.value.trim();
       if (!email) throw new Error('Enter your email first.');
       await auth.sendPasswordResetEmail(email);
       setStatus('Reset email sent. Check your inbox.');
@@ -107,9 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
       setStatus(err.message, true);
     }
   });
-}); // <-- important: close DOMContentLoaded
+});
 
-/* --- Shared helpers for dashboard.html --- */
+/* 5) Shared helpers for dashboard.html */
 window.logout = async function logout() {
   try {
     await auth.signOut();
@@ -134,28 +142,26 @@ window.renderDashboard = async function renderDashboard() {
     const basic = document.getElementById('basicContent');
 
     if (role === 'pro') {
-      if (pro) pro.style.display = 'block';
+      if (pro)   pro.style.display   = 'block';
       if (basic) basic.style.display = 'none';
     } else {
-      if (pro) pro.style.display = 'none';
+      if (pro)   pro.style.display   = 'none';
       if (basic) basic.style.display = 'block';
     }
   } catch (err) {
     console.error(err);
   }
 };
-// firebase.js
+
+/* 6) Dev path: “Upgrade” sets role=pro and redirects to dashboard
+   Replace with Stripe flow later. */
 window.upgradePro = async function upgradePro() {
   try {
     const user = auth.currentUser;
-
-    // If not signed in, send to login then back to dashboard
     if (!user) {
       window.location.href = 'login.html?next=dashboard.html';
       return;
     }
-
-    // Set your role to PRO in Firestore
     await db.collection('users')
       .doc(user.uid)
       .set(
@@ -166,13 +172,13 @@ window.upgradePro = async function upgradePro() {
         { merge: true }
       );
 
-    // Go to dashboard; renderDashboard() will show Pro now
     window.location.href = 'dashboard.html';
   } catch (err) {
     console.error('upgradePro failed:', err);
     alert(err.message || 'Failed to upgrade. Check Firestore rules & console.');
   }
 };
+
 
 
 
