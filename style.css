@@ -1,242 +1,226 @@
-/* ========= Shared UI primitives ========= */
-.btn {
-  display: inline-block;
-  padding: 10px 16px;
-  border-radius: 6px;
-  border: 2px solid #6A0DAD;
-  background: #6A0DAD;
-  color: #fff;
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease, color .2s ease;
-}
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(108,46,184,.4);
-}
-.btn.secondary {
-  background: #000;
-  color: #fff;
+/* ===========================
+   BrokeBull — Modern Landing
+   =========================== */
+
+/* ---------- Setup & Theme ---------- */
+:root{
+  --purple: #6c2eb8;
+  --purple-600: #5b25a0;
+  --purple-300: #b08ae4;
+  --ink: #eaeaf0;
+  --ink-dim: #cfcfe4;
+  --black: #000;
+  --card: rgba(18,18,22,.92);
+  --panel: rgba(0,0,0,.8);
+  --border: rgba(108,46,184,.55);
+  --glow: 0 14px 32px rgba(108,46,184,.35);
 }
 
-/* Hero CTAs (Create Account / Sign In / Go to Dashboard) */
-.hero-ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 16px;
-}
-.hero-ctas .cta { /* uses your existing .cta base */
-  border: 2px solid #6A0DAD;
-  border-radius: 6px;
-}
-.hero-ctas .cta.secondary {
-  background: #000;
-  color: #fff;
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  color: var(--ink);
+  background:#000;
+  line-height: 1.65;
+  position: relative;     /* lets our ::before sit behind content */
+  z-index: 0;
 }
 
-/* ========= Embedded auth panel on landing ========= */
-.auth-section {
-  max-width: 720px;
-  margin: 40px auto;
-  padding: 20px;
-  background: rgba(17,17,17,0.85);
-  border: 1px solid #6c2eb8;
-  border-radius: 10px;
-  text-align: center;
+/* Global containers */
+.container{
+  width: min(1200px, 92vw);
+  margin: 0 auto;
 }
-.auth-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 10px;
-}
-.auth-row input {
-  min-width: 220px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #333;
-  background: #0b0b0b;
-  color: #fff;
-}
-.auth-row button {
-  padding: 10px 16px;
-  border-radius: 6px;
-  border: 2px solid #6A0DAD;
-  background: #6A0DAD;
-  color: #fff;
-  cursor: pointer;
-  transition: transform .2s ease, box-shadow .2s ease;
-}
-.auth-row button.secondary { background: #000; color: #fff; }
-.auth-row button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(108,46,184,.4); }
-.auth-helpers { margin-top: 8px; font-size: 0.95rem; }
-.auth-status { display: block; margin-top: 8px; color: #ffdf6e; }
 
-/* ========= Page containers and tables (Basic/Pro) ========= */
-.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-.container h2 { margin-top: 24px; }
+/* ---------- Full-page Candle Background ---------- */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: 0;             /* behind content, above body bg */
+  background: url('images/candlesticks.png') center/cover no-repeat;
+  opacity: .22;           /* tweak intensity */
+  pointer-events: none;
+  filter: saturate(1.1) contrast(1.02);
+}
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  background: rgba(0,0,0,0.6);
-  border: 1px solid #2a2a2a;
-  border-radius: 8px;
+/* Soft vignette for readability */
+body::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(1500px 600px at 50% -10%, rgba(0,0,0,.0), rgba(0,0,0,.55)),
+    radial-gradient(1400px 700px at 50% 120%, rgba(0,0,0,.0), rgba(0,0,0,.6));
+  pointer-events: none;
+}
+
+/* Every major section floats above the background */
+section, header, footer { position: relative; z-index: 1; }
+
+/* ---------- Hero ---------- */
+.hero{
+  background: linear-gradient(140deg, rgba(108,46,184,.96) 0%, rgba(44,0,84,.92) 50%, rgba(15,15,18,.92) 100%);
+  padding: clamp(36px, 6vw, 72px) 0;
   overflow: hidden;
 }
-.table th, .table td {
-  border-bottom: 1px solid #2a2a2a;
-  padding: 10px;
-  text-align: left;
-}
-.table th { background: rgba(106, 13, 173, 0.15); }
-
-/* ========= Watchlist + Q&A form ========= */
-.watchlist li { margin: 6px 0; }
-
-.qa-form input,
-.qa-form textarea {
-  width: 100%;
-  max-width: 600px;
-  display: block;
-  margin: 6px 0;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #333;
-  background: #0b0b0b;
-  color: #fff;
-}
-.qa-form button { margin-top: 6px; }
-
-/* Tiny helper text */
-.tiny { font-size: 0.85rem; color: #bbb; }
-/* ===================== */
-/* HERO: gradient + sheen */
-/* ===================== */
-.hero {
-  /* strong purple-to-black gradient */
-  background: linear-gradient(135deg, rgba(108,46,184,.95) 0%, rgba(44,0,84,.92) 45%, rgba(0,0,0,.9) 100%);
-  padding-top: 56px; /* a bit more presence */
-  padding-bottom: 56px;
-}
-.hero h1 {
-  font-size: clamp(2rem, 4.5vw, 3.25rem);
-  letter-spacing: .5px;
-  margin: 12px 0 4px;
-  text-shadow: 0 6px 22px rgba(108,46,184,.45);
-}
-.hero .logo {
-  width: 112px;
-  filter: drop-shadow(0 6px 16px rgba(0,0,0,.5));
+.hero .container{ display:flex; align-items:center; gap: 28px; flex-wrap: wrap; }
+.logo{ width: 96px; height:auto; filter: drop-shadow(0 10px 18px rgba(0,0,0,.55)); }
+.hero h1{
+  font-size: clamp(2.2rem, 4.8vw, 3.4rem);
+  margin:.25rem 0 .5rem;
+  text-shadow: 0 8px 24px rgba(108,46,184,.45);
 }
 
-/* subtle moving sheen overlay */
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(1200px 400px at -10% -30%, rgba(255,255,255,.07), transparent 65%)
-              , radial-gradient(900px 300px at 110% 120%, rgba(108,46,184,.12), transparent 70%);
-  pointer-events: none;
-  animation: heroSheen 14s linear infinite;
-  opacity: .9;
+/* animated sheen */
+.hero::after{
+  content:"";
+  position:absolute; inset:-10%;
+  background:
+    radial-gradient(1200px 400px at -10% -30%, rgba(255,255,255,.08), transparent 65%),
+    radial-gradient(900px 300px at 110% 120%, rgba(108,46,184,.14), transparent 70%);
+  animation: sheen 14s linear infinite;
+  pointer-events:none;
 }
-@keyframes heroSheen {
-  0%   { transform: translateX(-2%) translateY(0); }
-  50%  { transform: translateX(2%) translateY(-1%); }
-  100% { transform: translateX(-2%) translateY(0); }
+@keyframes sheen{
+  0%{ transform: translateX(-2%) translateY(0) }
+  50%{ transform: translateX(2%) translateY(-1%) }
+  100%{ transform: translateX(-2%) translateY(0) }
 }
 
-/* tighten hero CTAs */
-.hero-ctas .cta,
-.hero .cta,
-.hero .btn {
-  font-weight: 600;
-  padding: 12px 18px;
+/* Hero Actions */
+.hero .actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:8px; }
+.btn{
+  --bg:#fff; --fg:#000; --bd:transparent;
+  display:inline-flex; align-items:center; justify-content:center;
+  padding: 12px 18px; border-radius:10px; text-decoration:none; cursor:pointer;
+  border:2px solid var(--bd); background:var(--bg); color:var(--fg);
+  font-weight:600; transition: transform .2s ease, box-shadow .25s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,.35) }
+.btn-primary{ --bg: var(--purple); --fg:#fff; }
+.btn-outline{ --bg: transparent; --fg: var(--ink); --bd: var(--border); }
+.btn-outline:hover{ background: rgba(255,255,255,.06); border-color: var(--purple-300); }
+
+/* ---------- What We Do ---------- */
+.what-we-do{
+  padding: clamp(36px, 6vw, 72px) 0;
+  backdrop-filter: blur(0.3px);
+}
+.what-we-do .container{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: clamp(18px, 3.6vw, 28px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+}
+h2{
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  letter-spacing:.3px;
+  margin: 0 0 10px;
+}
+
+/* ---------- Pricing ---------- */
+.pricing{
+  padding: clamp(36px, 6vw, 72px) 0;
+}
+.pricing .container{ display:grid; gap: 22px; }
+.cards{
+  display:grid; gap:22px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.card{
+  background:#fff; color:#111; border-radius:14px;
+  border:1px solid var(--purple-300);
+  padding: 22px 20px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.35);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  min-height: 280px;
+}
+.card h3{ margin:4px 0 10px; }
+.card ul{ margin:0 0 14px; padding-left:18px; }
+.card:hover{ transform: translateY(-6px); box-shadow: var(--glow); border-color:#fff; }
+
+/* Pricing buttons (white base, purple hover) */
+.card .btn{
+  --bg:#fff; --fg: var(--purple); --bd: var(--purple);
   border-radius: 8px;
 }
-
-/* Global type tweaks */
-h2 {
-  font-size: clamp(1.4rem, 2.6vw, 2rem);
-  letter-spacing: .3px;
-  margin: 8px 0 14px;
+.card .btn:hover{
+  --bg: var(--purple); --fg:#fff;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 22px rgba(108,46,184,.35);
 }
-p { line-height: 1.7; }
 
-/* ===================== */
-/* TESTIMONIALS polish   */
-/* ===================== */
-.testimonials { padding-top: 48px; padding-bottom: 48px; }
-
-/* grid that adapts better than plain flex */
-.testimonial-row {
-  display: grid;
+/* ---------- Testimonials ---------- */
+.testimonials{
+  padding: clamp(36px, 6vw, 72px) 0;
+}
+.testimonials .container{ text-align:center; }
+.grid-testimonials{
+  margin-top: 16px;
+  display:grid; gap:22px;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 22px;
-  align-items: stretch;
 }
-
-/* cards */
-.testimonial {
-  background: rgba(17,17,17,.9);
-  border: 1px solid rgba(108,46,184,.45);
+.t-card{
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
   transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-  box-shadow: 0 6px 14px rgba(0,0,0,.25);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
 }
-
-/* avatar ring + consistent sizing (works with your existing <img>) */
-.testimonial img {
-  width: 88px;
-  height: 88px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid #6A0DAD;
+.t-card:hover{ transform: translateY(-6px); box-shadow: var(--glow); border-color: var(--purple-300); }
+.t-card img{
+  width: 88px; height: 88px; object-fit: cover; border-radius:50%;
+  border:2px solid var(--purple);
   box-shadow: 0 6px 16px rgba(108,46,184,.35);
   margin-bottom: 10px;
 }
+.t-card p{ color: var(--ink-dim); font-style: italic; }
 
-/* quote text styling (your <p> structure stays the same) */
-.testimonial p {
-  color: #ddd;
-  font-style: italic;
-  font-size: .97rem;
-  line-height: 1.55;
+/* ---------- Founder ---------- */
+.founder{
+  padding: clamp(36px, 6vw, 72px) 0;
+}
+.founder .wrap{
+  display:grid; gap: 24px;
+  grid-template-columns: 180px 1fr;
+  align-items: start;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 18px 22px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+}
+.founder img{
+  width: 180px; border-radius: 12px; height:auto;
+  box-shadow: 0 6px 16px rgba(108,46,184,.35);
+}
+.founder p{ color: var(--ink-dim); margin: 0; }
+
+/* ---------- Auth links (hero) ---------- */
+.auth-links{
+  margin-left: auto;
+  display:flex; gap: 10px; flex-wrap: wrap;
 }
 
-/* hover lift + purple glow */
-.testimonial:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 32px rgba(108,46,184,.35);
-  border-color: #b08ae4;
+/* ---------- Footer (optional) ---------- */
+footer{
+  text-align:center; color:#9a9ab2; padding: 24px 0 48px;
+  font-size:.9rem;
 }
 
-/* ===================== */
-/* PRICING minor tighten */
-/* ===================== */
-.pricing h2 { margin-bottom: 10px; }
-.card h3 { margin-top: 6px; margin-bottom: 10px; }
-.card ul { margin: 0 0 10px; padding-left: 18px; }
-.card { min-height: 270px; } /* equal-ish heights */
-.card .btn { font-weight: 600; }
-
-/* ===================== */
-/* RESPONSIVE niceties   */
-/* ===================== */
-@media (max-width: 720px) {
-  .hero { padding-top: 44px; padding-bottom: 44px; }
-  .hero .logo { width: 96px; }
-  .auth-section { margin: 28px 14px; }
-  .container { padding: 14px; }
+/* ---------- Responsiveness ---------- */
+@media (max-width: 900px){
+  .founder .wrap{ grid-template-columns: 1fr; text-align:center; }
+  .auth-links{ margin-left: 0; }
 }
+
 
