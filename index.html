@@ -1,68 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Broke Bull Investments</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Broke Bull Investments</title>
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase Compat SDKs (match firebase.js usage) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- Your Firebase config/logic (must be after SDKs) -->
+  <script src="firebase.js"></script>
 </head>
 <body>
-    <header class="hero">
-        <img src="images/logo.jpg" alt="Logo" class="logo"/>
-        <h1>Brick by Brick</h1>
-        <a href="#" class="cta">Join Now for Market Winners</a>
-    </header>
+  <!-- HERO -->
+  <header class="hero">
+    <img src="images/logo.jpg" alt="Logo" class="logo"/>
+    <h1>Brick by Brick</h1>
+    <div class="hero-ctas">
+      <a class="cta" href="#auth">Create Account</a>
+      <a class="cta secondary" href="login.html">Sign In</a>
+      <!-- toggled visible if already signed in -->
+      <a id="goDashboard" class="cta" href="dashboard.html" style="display:none;">Go to Dashboard</a>
+    </div>
+  </header>
 
-    <section class="what-we-do" style="background-image: url('images/candlesticks.png'); background-size: cover; background-repeat: no-repeat;">
+  <!-- WHAT WE DO -->
+  <section class="what-we-do" style="background-image:url('images/candlesticks.png'); background-size:cover; background-repeat:no-repeat;">
+    <h2>What We Do</h2>
+    <p>
+      We identify high-potential stocks in Stage 2 using a proprietary algorithm. Our platform empowers long-term investors with
+      institutional-grade analysis and weekly insights.
+    </p>
+  </section>
 
-        <h2>What We Do</h2>
-        <p>We identify high potential stocks in Stage 2 using a proprietary algorithm. Our platform empowers long-term investors with institutional-grade analysis and weekly insights.</p>
-    </section>
+  <!-- PRICING -->
+  <section class="pricing">
+    <h2>Pricing</h2>
+    <div class="card-container">
+      <div class="card">
+        <h3>Free</h3>
+        <ul>
+          <li>Limited Watchlist Access</li>
+          <li>Basic Newsletter</li>
+        </ul>
+        <!-- Use your newsletter link or on-page auth -->
+        <a href="https://newsletter.brokebullinvestments.com/subscribe" class="btn" target="_blank" rel="noopener">Join Free</a>
+      </div>
+      <div class="card">
+        <h3>Pro — $19/month</h3>
+        <ul>
+          <li>Full Watchlist Access</li>
+          <li>Daily Market Insights</li>
+          <li>Pro Newsletter</li>
+        </ul>
+        <!-- Calls window.upgradePro() from firebase.js -->
+        <a href="#" class="btn" onclick="upgradePro(); return false;">Join Pro</a>
+      </div>
+    </div>
+  </section>
 
-    <section class="pricing">
-        <h2>Pricing</h2>
-        <div class="card-container">
-            <div class="card">
-                <h3>Free</h3>
-                <ul>
-                    <li>Limited Watchlist Access</li>
-                    <li>Basic Newsletter</li>
-                </ul>
-                <a href="#" class="btn">Join Now</a>
-            </div>
-            <div class="card">
-                <h3>Pro - $19/month</h3>
-                <ul>
-                    <li>Full Watchlist Access</li>
-                    <li>Daily Market Insights</li>
-                    <li>Pro Newsletter</li>
-                </ul>
-                <a href="#" class="btn">Join Now</a>
-            </div>
-        </div>
-    </section>
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <h2>Testimonials</h2>
+    <div class="testimonial-row">
+      <div class="testimonial"><img src="images/testimonial1.png" alt="Mike"/><p>“Best investment insights I’ve ever received.” – Mike</p></div>
+      <div class="testimonial"><img src="images/testimonial2.png" alt="Latoya"/><p>“The algo nailed 3 big moves in a row.” – Latoya</p></div>
+      <div class="testimonial"><img src="images/testimonial3.png" alt="Chris"/><p>“I’m finally confident in my stock picks.” – Chris</p></div>
+      <div class="testimonial"><img src="images/testimonial4.png" alt="Janine"/><p>“The Pro tier is worth every dollar.” – Janine</p></div>
+      <div class="testimonial"><img src="images/testimonial5.png" alt="Marcus"/><p>“Strong results, solid support.” – Marcus</p></div>
+    </div>
+  </section>
 
-    <section class="testimonials">
-        <h2>Testimonials</h2>
-        <div class="testimonial-row">
-            <div class="testimonial"><img src="images/testimonial1.png"/><p>"Best investment insights I’ve ever received." – Mike</p></div>
-            <div class="testimonial"><img src="images/testimonial2.png"/><p>"The algo nailed 3 big moves in a row." – Latoya</p></div>
-            <div class="testimonial"><img src="images/testimonial3.png"/><p>"I’m finally confident in my stock picks." – Chris</p></div>
-            <div class="testimonial"><img src="images/testimonial4.png"/><p>"The Pro tier is worth every dollar." – Janine</p></div>
-            <div class="testimonial"><img src="images/testimonial5.png"/><p>"Strong results, solid support." – Marcus</p></div>
-        </div>
-    </section>
-
-    <section class="founder">
+  <!-- FOUNDER -->
+  <section class="founder">
     <h2>Founder</h2>
     <img src="founder.jpg" class="founder-photo" alt="Founder Photo" />
     <div class="founder-bio">
-        <p>
-            <!-- Insert your bio below -->
-            Anthony Norwood is a veteran and long-term investor who brings strategic insight and institutional-grade analysis to BrokeBull Investments. With a background in cybersecurity and military intelligence, his mission is to simplify market success for everyday investors—brick by brick.
-        </p>
+      <p>
+        Anthony Norwood is a veteran and long-term investor who brings strategic insight and institutional-grade analysis to
+        BrokeBull Investments. With a background in cybersecurity and military intelligence, his mission is to simplify market
+        success for everyday investors—brick by brick.
+      </p>
     </div>
-</section>
+  </section>
+
+  <!-- EMBEDDED AUTH (Sign Up / Sign In on the landing page) -->
+  <section id="auth" class="auth-section">
+    <h2>Create Account or Sign In</h2>
+    <div class="auth-row">
+      <input id="email" type="email" placeholder="email@domain.com" autocomplete="username" />
+      <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
+      <button id="createBtn" type="button">Create Account</button>
+      <button id="signInBtn" type="button" class="secondary">Sign In</button>
+    </div>
+    <div class="auth-helpers">
+      <a href="#" id="resetLink">Forgot password?</a>
+      <span id="status" class="auth-status"></span>
+    </div>
+  </section>
+
+  <script>
+    // If user is already signed in, show "Go to Dashboard" CTA in the hero
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.firebase) return;
+      const auth = firebase.auth();
+      const go = document.getElementById('goDashboard');
+      auth.onAuthStateChanged(user => {
+        if (go) go.style.display = user ? 'inline-block' : 'none';
+      });
+    });
+  </script>
 </body>
 </html>
-<a class="btn" href="login.html">Login</a>
