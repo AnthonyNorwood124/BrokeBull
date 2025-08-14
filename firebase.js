@@ -144,11 +144,36 @@ window.renderDashboard = async function renderDashboard() {
     console.error(err);
   }
 };
-
 // firebase.js
-window.upgradePro = function upgradePro() {
-  // Temporary: send users straight to the dashboard
-  window.location.href = 'dashboard.html';
+window.upgradePro = async function upgradePro() {
+  try {
+    const user = auth.currentUser;
+
+    // If not signed in, send to login then back to dashboard
+    if (!user) {
+      window.location.href = 'login.html?next=dashboard.html';
+      return;
+    }
+
+    // Set your role to PRO in Firestore
+    await db.collection('users')
+      .doc(user.uid)
+      .set(
+        {
+          role: 'pro',
+          proSince: firebase.firestore.FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+
+    // Go to dashboard; renderDashboard() will show Pro now
+    window.location.href = 'dashboard.html';
+  } catch (err) {
+    console.error('upgradePro failed:', err);
+    alert(err.message || 'Failed to upgrade. Check Firestore rules & console.');
+  }
 };
+
+
 
 
