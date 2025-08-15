@@ -153,29 +153,46 @@ window.renderDashboard = async function renderDashboard() {
   }
 };
 
-/* 6) Dev path: “Upgrade” sets role=pro and redirects to dashboard
-   Replace with Stripe flow later. */
+// --- Join Pro via Stripe Checkout (Firestore flow) ---
 window.upgradePro = async function upgradePro() {
   try {
+    // 1) Must be signed in
     const user = auth.currentUser;
     if (!user) {
+      // bounce to login and come back
       window.location.href = 'login.html?next=dashboard.html';
       return;
     }
-    await db.collection('users')
-      .doc(user.uid)
-      .set(
-        {
-          role: 'pro',
-          proSince: firebase.firestore.FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      );
 
-    window.location.href = 'dashboard.html';
+    // 2) Create a checkout_sessions doc under this user
+    const sessionRef = await db
+      .collection('customers')
+      .doc(user.uid)
+      .collection('checkout_sessions')
+      .add({
+        mode: 'subscription',
+        price: 'price_1RwNgQ0PKkpPJFZAkXlbhB31', // <-- your Stripe price ID
+        success_url: window.location.origin + '/dashboard.html?pro=1',
+        cancel_url:  window.location.origin + '/dashboard.html?canceled=1',
+        allow_promotion_codes: true
+      });
+
+    // 3) Wait for the extension to write back { url } or { error }
+    sessionRef.onSnapshot((snap) => {
+      const data = snap.data();
+      if (!data) return;
+      if (data.error) {
+        console.error('Stripe Checkout error:', data.error);
+        alert(data.error.message || 'Checkout failed.');
+      }
+      if (data.url) {
+        // Redirect to Stripe-hosted Checkout
+        window.location.assign(data.url);
+      }
+    });
   } catch (err) {
-    console.error('upgradePro failed:', err);
-    alert(err.message || 'Failed to upgrade. Check Firestore rules & console.');
+    console.error('upgradePro() failed:', err);
+    alert(err.message || 'Something went wrong starting Checkout.');
   }
 };
 
