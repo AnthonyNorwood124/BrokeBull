@@ -275,4 +275,33 @@ a:hover{ color: #fff; }
 
 /* Keep widgets on top of the bg overlay */
 .tradingview-widget-container{ position: relative; z-index: 1; }
+/* ===== BrokeBull: anti-flicker + stable overlay overrides ===== */
+
+/* 1) Hide both dashboards until Firebase decides which to show */
+#basicContent,
+#proContent {
+  display: none;
+}
+
+/* 2) Make the candlestick overlay stable across browsers/GPUs */
+html, body { background-color: #000; }
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url('images/candlesticks.png') center / cover no-repeat;
+  opacity: 0.18;              /* tweak to taste */
+  z-index: 0;                  /* keep >= 0 to avoid compositor bugs */
+  pointer-events: none;
+  transform: translateZ(0);    /* own layer == fewer repaints */
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* 3) Ensure your real content is above the overlay */
+header, main, .hero, .pricing, .testimonials, .founder {
+  position: relative;
+  z-index: 1;
+}
 
