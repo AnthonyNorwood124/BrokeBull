@@ -8,25 +8,29 @@
   <!-- Site styles -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Firebase Compat SDKs -->
+  <!-- Firebase Compat SDKs (match firebase.js usage) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- Your Firebase config/logic -->
+  <!-- Your Firebase config/logic (must be after SDKs) -->
   <script defer src="firebase.js"></script>
 </head>
 <body>
   <!-- HERO -->
   <header class="hero">
     <div class="container hero-bar">
+      <!-- centered + larger logo -->
       <img class="logo logo--xl" src="images/logo.jpg" alt="BrokeBull logo" />
+
+      <!-- clear auth actions -->
       <nav class="auth-links">
         <a class="btn btn-outline" href="login.html?next=dashboard.html">Login</a>
         <a class="btn btn-outline" href="login.html?next=dashboard.html#signup">Create Account</a>
         <a class="btn btn-primary" href="dashboard.html" id="goDashboard">Go to Dashboard</a>
       </nav>
     </div>
+
     <h1>Brick by Brick</h1>
     <p class="subtitle">Join Now for Market Winners</p>
   </header>
@@ -52,6 +56,7 @@
         </ul>
         <a href="https://newsletter.brokebullinvestments.com/subscribe" class="btn" target="_blank" rel="noopener">Join Free</a>
       </div>
+
       <div class="card">
         <h3>Pro — $19/month</h3>
         <ul>
@@ -59,6 +64,7 @@
           <li>Daily Market Insights</li>
           <li>Pro Newsletter</li>
         </ul>
+        <!-- TEMP: uses window.upgradePro() (no Stripe) -->
         <a href="#" class="btn" onclick="upgradePro(); return false;">Join Pro</a>
       </div>
     </div>
@@ -68,11 +74,11 @@
   <section class="testimonials">
     <h2>Testimonials</h2>
     <div class="testimonial-row">
-      <div class="testimonial"><img src="images/testimonial1.png" alt="Mike"/><p>“Best investment insights I’ve ever received.” – Mike</p></div>
-      <div class="testimonial"><img src="images/testimonial2.png" alt="Latoya"/><p>“The algo nailed 3 big moves in a row.” – Latoya</p></div>
-      <div class="testimonial"><img src="images/testimonial3.png" alt="Chris"/><p>“I’m finally confident in my stock picks.” – Chris</p></div>
-      <div class="testimonial"><img src="images/testimonial4.png" alt="Janine"/><p>“The Pro tier is worth every dollar.” – Janine</p></div>
-      <div class="testimonial"><img src="images/testimonial5.png" alt="Marcus"/><p>“Strong results, solid support.” – Marcus</p></div>
+      <div class="testimonial"><img src="images/testimonial1.png" alt="Mike"><p>“Best investment insights I’ve ever received.” – Mike</p></div>
+      <div class="testimonial"><img src="images/testimonial2.png" alt="Latoya"><p>“The algo nailed 3 big moves in a row.” – Latoya</p></div>
+      <div class="testimonial"><img src="images/testimonial3.png" alt="Chris"><p>“I’m finally confident in my stock picks.” – Chris</p></div>
+      <div class="testimonial"><img src="images/testimonial4.png" alt="Janine"><p>“The Pro tier is worth every dollar.” – Janine</p></div>
+      <div class="testimonial"><img src="images/testimonial5.png" alt="Marcus"><p>“Strong results, solid support.” – Marcus</p></div>
     </div>
   </section>
 
@@ -106,3 +112,4 @@
   </section>
 </body>
 </html>
+
