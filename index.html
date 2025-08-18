@@ -15,30 +15,29 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
 
   <!-- Your Firebase config/logic (must be after SDKs) -->
-  <script src="firebase.js"></script>
+  <script defer src="firebase.js"></script>
 </head>
 <body>
   <!-- HERO -->
   <header class="hero">
-  <div class="container hero-bar">
-    <!-- centered + larger logo -->
-    <img class="logo logo--xl" src="images/logo.jpg" alt="BrokeBull logo">
+    <div class="container hero-bar">
+      <!-- centered + larger logo -->
+      <img class="logo logo--xl" src="images/logo.jpg" alt="BrokeBull logo" />
 
-    <!-- clear auth actions -->
-    <nav class="auth-links">
-      <a class="btn btn-outline" href="login.html">Login</a>
-      <a class="btn btn-outline" href="login.html#signup">Create Account</a>
-      <a class="btn btn-primary" href="dashboard.html">Go to Dashboard</a>
-    </nav>
-  </div>
+      <!-- clear auth actions (always visible per your request) -->
+      <nav class="auth-links">
+        <a class="btn btn-outline" href="login.html?next=dashboard.html">Login</a>
+        <a class="btn btn-outline" href="login.html?next=dashboard.html#signup">Create Account</a>
+        <a class="btn btn-primary" href="dashboard.html" id="goDashboard">Go to Dashboard</a>
+      </nav>
+    </div>
 
-  <h1>Brick by Brick</h1>
-  <p class="subtitle">Join Now for Market Winners</p>
-</header>
-
+    <h1>Brick by Brick</h1>
+    <p class="subtitle">Join Now for Market Winners</p>
+  </header>
 
   <!-- WHAT WE DO -->
-  <section class="what-we-do" style="background-image:url('images/candlesticks.png'); background-size:cover; background-repeat:no-repeat;">
+  <section class="what-we-do">
     <h2>What We Do</h2>
     <p>
       We identify high-potential stocks in Stage 2 using a proprietary algorithm. Our platform empowers long-term investors with
@@ -56,9 +55,10 @@
           <li>Limited Watchlist Access</li>
           <li>Basic Newsletter</li>
         </ul>
-        <!-- Use your newsletter link or on-page auth -->
+        <!-- Use your newsletter link -->
         <a href="https://newsletter.brokebullinvestments.com/subscribe" class="btn" target="_blank" rel="noopener">Join Free</a>
       </div>
+
       <div class="card">
         <h3>Pro — $19/month</h3>
         <ul>
@@ -87,6 +87,7 @@
   <!-- FOUNDER -->
   <section class="founder">
     <h2>Founder</h2>
+    <!-- keep this path exactly where your file lives; if your image is in /images, change to images/founder.jpg -->
     <img src="founder.jpg" class="founder-photo" alt="Founder Photo" />
     <div class="founder-bio">
       <p>
@@ -111,17 +112,5 @@
       <span id="status" class="auth-status"></span>
     </div>
   </section>
-
-  <script>
-    // If user is already signed in, show "Go to Dashboard" CTA in the hero
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!window.firebase) return;
-      const auth = firebase.auth();
-      const go = document.getElementById('goDashboard');
-      auth.onAuthStateChanged(user => {
-        if (go) go.style.display = user ? 'inline-block' : 'none';
-      });
-    });
-  </script>
 </body>
 </html>
