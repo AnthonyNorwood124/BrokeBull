@@ -128,29 +128,40 @@ window.logout = async function logout() {
   }
 };
 
+// Replace your existing renderDashboard with this one
 window.renderDashboard = async function renderDashboard() {
+  const pro    = document.getElementById('proContent');
+  const basic  = document.getElementById('basicContent');
+  const loader = document.getElementById('loading');
+
+  // Hide both initially to prevent any flash
+  if (basic) basic.style.display = 'none';
+  if (pro)   pro.style.display   = 'none';
+
   const user = auth.currentUser;
   if (!user) {
-    window.location.href = 'login.html';
+    window.location.href = 'login.html?next=dashboard.html';
     return;
   }
+
   try {
     const snap = await db.collection('users').doc(user.uid).get();
     const role = snap.exists ? (snap.data().role || 'basic') : 'basic';
 
-    const pro   = document.getElementById('proContent');
-    const basic = document.getElementById('basicContent');
-
     if (role === 'pro') {
       if (pro)   pro.style.display   = 'block';
-      if (basic) basic.style.display = 'none';
     } else {
-      if (pro)   pro.style.display   = 'none';
       if (basic) basic.style.display = 'block';
     }
   } catch (err) {
-    console.error(err);
+    console.error('renderDashboard error:', err);
+    // Fallback to basic if anything odd happens
+    if (basic) basic.style.display = 'block';
+  } finally {
+    if (loader) loader.style.display = 'none';
   }
+};
+
 };
 window.upgradePro = async function upgradePro() {
   try {
