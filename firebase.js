@@ -31,7 +31,6 @@ function getNextUrl(def = 'dashboard.html') {
     const url = new URL(window.location.href);
     const nxt = url.searchParams.get('next');
     if (nxt && !/^https?:/i.test(nxt)) {
-      // normalize: strip leading slashes
       return nxt.replace(/^\/*/, '') || def;
     }
   } catch (_) {}
@@ -62,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!email || !pass) throw new Error('Enter email and password.');
       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       await auth.signInWithEmailAndPassword(email, pass);
-      // Proactively navigate; don't wait for the auth observer
       window.location.replace(getNextUrl());
     } catch (err) {
       console.error(err);
@@ -86,11 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
         email,
         role: 'basic',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).catch(err => {
-        console.warn('Firestore profile write failed (non-blocking):', err);
-      });
+      }).catch(err => console.warn('Profile write (non-blocking):', err));
 
-      window.location.replace(getNextUrl()); // immediate redirect
+      window.location.replace(getNextUrl());
     } catch (err) {
       console.error(err);
       if (err.code === 'auth/email-already-in-use') {
@@ -158,79 +154,30 @@ window.renderDashboard = async function renderDashboard() {
     }
   } catch (err) {
     console.error('renderDashboard error:', err);
-    // Fallback to basic if anything odd happens
     if (basic) basic.style.display = 'block';
   } finally {
     if (loader) loader.style.display = 'none';
   }
 };
 
-/* 6) Upgrade to Pro via Stripe Checkout (Firestore → extension) */
+/* 6) TEMP: Upgrade to Pro by setting role in Firestore (no Stripe) */
 window.upgradePro = async function upgradePro() {
   try {
     const user = auth.currentUser;
     if (!user) {
-      // Not logged in → go sign in first, then come back
       window.location.href = 'login.html?next=dashboard.html';
       return;
     }
-
-    // (Optional) Ensure parent doc exists (not required, but helpful)
-    await db.collection('customers').doc(user.uid).set(
-      { lastCheckoutAttempt: firebase.firestore.FieldValue.serverTimestamp() },
+    await db.collection('users').doc(user.uid).set(
+      { role: 'pro', proSince: firebase.firestore.FieldValue.serverTimestamp() },
       { merge: true }
     );
-
-    // Create a checkout session doc; the Stripe extension will process it
-    const sessionRef = await db
-      .collection('customers')
-      .doc(user.uid)
-      .collection('checkout_sessions')
-      .add({
-        price: 'price_1RwNgQ0PKkpPJFZAkXlbhB31', // your Price ID
-        mode: 'subscription',
-        success_url: 'https://www.brokebullinvestments.com/dashboard.html?upgrade=success',
-        cancel_url:  'https://www.brokebullinvestments.com/dashboard.html?upgrade=cancel',
-        allow_promotion_codes: true
-      });
-
-    // Listen for the extension to write back the URL / sessionId
-    sessionRef.onSnapshot(async (snap) => {
-      const data = snap.data();
-      if (!data) return;
-
-      if (data.error) {
-        alert('Stripe error: ' + (data.error.message || 'Checkout failed.'));
-        console.error('Stripe Checkout error:', data.error);
-        return;
-      }
-
-      // Preferred: extension returns a direct URL to redirect to
-      if (data.url) {
-        window.location.assign(data.url);
-        return;
-      }
-
-      // Fallback: some versions return sessionId; needs Stripe.js on the page
-      if (data.sessionId) {
-        if (typeof Stripe === 'undefined') {
-          alert('Stripe.js not loaded. Add <script src="https://js.stripe.com/v3"></script> to this page.');
-          return;
-        }
-        const stripe = Stripe('pk_test_51RwNeh0PKkpPJFZAV0rAShHtE7uNKQ36xc064JloSlVUgCdpiliIynyFfwxm65sdEgftcp0dv9gh8OotZXxrpid000QSP9SqZk');
-        const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
-        if (error) {
-          alert(error.message || 'Stripe redirect failed');
-          console.error(error);
-        }
-      }
-    });
+    window.location.replace('dashboard.html');
   } catch (err) {
     console.error('upgradePro failed:', err);
-    alert(err.message || 'Upgrade failed. Check Firebase Functions logs for the Stripe extension.');
+    alert(err.message || 'Upgrade failed.');
   }
 };
-
 
 
 
