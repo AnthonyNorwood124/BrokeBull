@@ -4,55 +4,70 @@
   <meta charset="utf-8" />
   <title>Login to BrokeBull</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
- <!-- Optional: your site CSS (leave as-is if you already have it) -->
-  <link rel="stylesheet" href="style.css">
+
+  <!-- Anti-flicker just for this page -->
   <style>
-    /* Minimal layout just so you can see the status/errors clearly */
-    .auth-wrap {
-      position: relative;
-      z-index: 2; /* above any background image */
-      padding: 16px;
-    }
-    .auth-row {
-      display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
-    }
-    .auth-row input {
-      padding: 6px 8px; border-radius: 4px; border: 1px solid #333;
-    }
-    .auth-row button {
-      padding: 6px 10px; border-radius: 4px; border: 1px solid #6A0DAD;
-      background:#6A0DAD; color:#fff; cursor:pointer;
-    }
-    .auth-row button:hover { filter: brightness(1.1); }
-    #status {
-      margin-top: 10px; font-size: 0.95rem; color: #ffdf6e;
-    }
+    /* Keep the page hidden during initial auth check; shows after load */
+    body { opacity: 0; transition: opacity .15s ease; }
+    /* Kill the sitewide candlestick overlay on this page only */
+    body.no-overlay::before { display: none !important; }
+    /* Minimal layout so the form looks clean without your full CSS */
+    .auth-wrap { max-width: 720px; margin: 4rem auto; padding: 16px; }
+    .auth-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .auth-row input { padding: 8px 10px; border-radius: 6px; border: 1px solid #333; }
+    .auth-row button { padding: 8px 12px; border-radius: 6px; border: 1px solid #6A0DAD; background:#6A0DAD; color:#fff; cursor:pointer; }
+    .auth-row button.secondary { background:#111; border-color:#6A0DAD; color:#fff; }
+    .auth-row button:hover { filter: brightness(1.08); }
+    #status { margin-top: 10px; font-size: .95rem; color: #ffdf6e; }
+    .links { margin-top: 10px; }
+    .links a { color:#c9a7ff; text-decoration:none; }
   </style>
- <!-- Firebase compat SDKs (work great on static GitHub Pages) -->
+
+  <!-- Your site styles (optional; fine to keep) -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase compat SDKs (must come before firebase.js) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
 
+  <!-- Your firebase logic (auth handlers, redirects, etc.) -->
+  <script defer src="firebase.js"></script>
+
+  <!-- Reveal page when everything is ready (prevents visual flash) -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      // If firebase.js is going to redirect (already signed in), the page
+      // will remain hidden briefly and then navigate cleanly.
+      // If not redirecting, show the page.
+      requestAnimationFrame(() => { document.body.style.opacity = '1'; });
+    });
+  </script>
 </head>
-<body>
-  <!-- your background can remain as-is via CSS -->
+
+<!-- no-overlay disables the global candlestick ::before layer -->
+<body class="no-overlay">
   <div class="auth-wrap">
-    <h1 style="margin:0 0 8px;">Login to BrokeBull</h1>
-  <div class="auth-row">
+    <h1 style="margin:0 0 12px;">Login to BrokeBull</h1>
+
+    <div class="auth-row">
       <input id="email" type="email" placeholder="email@domain.com" autocomplete="username" />
       <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
       <button id="signInBtn" type="button">Sign In</button>
-      <button id="createBtn" type="button">Create Account</button>
+      <button id="createBtn" type="button" class="secondary">Create Account</button>
     </div>
-    <div style="margin-top:6px;">
-      Forgot your password?
-      <a href="#" id="resetLink">Reset it</a>
+
+    <div class="links">
+      <a href="#" id="resetLink">Forgot password?</a>
+      &nbsp;·&nbsp;
+      <a href="index.html">Back to Home</a>
+      &nbsp;·&nbsp;
+      <a href="dashboard.html">Go to Dashboard</a>
     </div>
+
     <div id="status"></div>
   </div>
-  <!-- Your firebase logic -->
-  <script src="firebase.js"></script>
 </body>
 </html>
+
 
