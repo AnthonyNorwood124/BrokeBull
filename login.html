@@ -5,58 +5,37 @@
   <title>Login to BrokeBull</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- 1) Kill any initial paint until we decide (no flash/flicker) -->
+  <!-- Your site CSS (keep as-is) -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Minimal local styles for the form -->
   <style>
-    html { visibility: hidden; } /* released below when ready */
-
-    /* Minimal, isolated styles (no global site CSS) */
-    :root { color-scheme: dark; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#000; color:#fff; }
-    .wrap { max-width: 720px; margin: 10vh auto; padding: 24px; }
-    h1 { margin: 0 0 12px; font-weight: 700; }
-    .row { display:flex; gap:10px; flex-wrap: wrap; align-items: center; }
-    input { padding:10px 12px; border-radius:8px; border:1px solid #333; background:#0c0c0c; color:#fff; min-width:260px; }
-    button { padding:10px 14px; border-radius:8px; border:1px solid #6A0DAD; background:#6A0DAD; color:#fff; cursor:pointer; }
-    button.secondary { background:#111; border-color:#6A0DAD; }
-    button:hover { filter: brightness(1.08); }
-    .links { margin-top: 10px; font-size: 0.95rem; }
-    .links a { color:#c9a7ff; text-decoration:none; }
-    #status { margin-top: 10px; font-size: .95rem; color: #ffdf6e; }
-
-    /* Nuke any accidental animations from browser/UA */
-    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .auth-wrap { position: relative; z-index: 2; padding: 16px; max-width: 720px; margin: 4rem auto; }
+    .auth-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .auth-row input { padding: 8px 10px; border-radius: 6px; border: 1px solid #333; }
+    .auth-row button { padding: 8px 12px; border-radius: 6px; border: 1px solid #6A0DAD; background:#6A0DAD; color:#fff; cursor:pointer; }
+    .auth-row button.secondary { background:#111; border-color:#6A0DAD; }
+    .auth-row button:hover { filter: brightness(1.08); }
+    #status { margin-top: 10px; font-size: 0.95rem; color: #ffdf6e; }
   </style>
 
-  <!-- 2) Firebase compat SDKs (match firebase.js) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js" defer></script>
-
-  <!-- 3) Your firebase logic (auth handlers, redirects, etc.) -->
-  <script src="firebase.js" defer></script>
-
-  <!-- 4) Release paint ONLY after SDKs are loaded and we’ve had a tick to redirect if signed in -->
-  <script>
-    // Make the page visible when DOM is ready (and after firebase.js had a chance to redirect)
-    document.addEventListener('DOMContentLoaded', () => {
-      // Small delay lets onAuthStateChanged fire first if user is already signed in
-      setTimeout(() => { document.documentElement.style.visibility = 'visible'; }, 50);
-    });
-  </script>
+  <!-- Firebase compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
-
 <body>
-  <div class="wrap">
-    <h1>Login to BrokeBull</h1>
+  <div class="auth-wrap">
+    <h1 style="margin:0 0 12px;">Login to BrokeBull</h1>
 
-    <div class="row" style="margin:8px 0 0;">
+    <div class="auth-row">
       <input id="email" type="email" placeholder="email@domain.com" autocomplete="username" />
       <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
       <button id="signInBtn" type="button">Sign In</button>
       <button id="createBtn" type="button" class="secondary">Create Account</button>
     </div>
 
-    <div class="links">
+    <div style="margin-top:10px;">
       <a href="#" id="resetLink">Forgot password?</a>
       &nbsp;·&nbsp;
       <a href="index.html">Back to Home</a>
@@ -66,6 +45,9 @@
 
     <div id="status"></div>
   </div>
+
+  <!-- Your firebase logic -->
+  <script src="firebase.js"></script>
 </body>
 </html>
 
