@@ -152,49 +152,70 @@ window.renderDashboard = async function renderDashboard() {
     console.error(err);
   }
 };
-
-// --- Join Pro via Stripe Checkout (Firestore flow) ---
 window.upgradePro = async function upgradePro() {
   try {
-    // 1) Must be signed in
     const user = auth.currentUser;
     if (!user) {
-      // bounce to login and come back
+      // Not logged in → go sign in first, then come back
       window.location.href = 'login.html?next=dashboard.html';
       return;
     }
 
-    // 2) Create a checkout_sessions doc under this user
-    const sessionRef = await db
+    // (Optional) Ensure parent doc exists (not required, but nice)
+    await db.collection('customers').doc(user.uid).set(
+      { lastCheckoutAttempt: firebase.firestore.FieldValue.serverTimestamp() },
+      { merge: true }
+    );
+
+    // Create a checkout session doc; the Stripe extension will process it
+    const checkoutSessionsRef = db
       .collection('customers')
       .doc(user.uid)
-      .collection('checkout_sessions')
-      .add({
-        mode: 'subscription',
-        price: 'price_1RwNgQ0PKkpPJFZAkXlbhB31', // <-- your Stripe price ID
-        success_url: window.location.origin + '/dashboard.html?pro=1',
-        cancel_url:  window.location.origin + '/dashboard.html?canceled=1',
-        allow_promotion_codes: true
-      });
+      .collection('checkout_sessions');
 
-    // 3) Wait for the extension to write back { url } or { error }
-    sessionRef.onSnapshot((snap) => {
+    const sessionRef = await checkoutSessionsRef.add({
+      price: 'price_1RwNgQ0PKkpPJFZAkXlbhB31', // <-- your Price ID
+      // mode is inferred from the Price (recurring → subscription). You may still set it explicitly:
+      mode: 'subscription',
+      success_url: 'https://www.brokebullinvestments.com/dashboard.html?upgrade=success',
+      cancel_url: 'https://www.brokebullinvestments.com/dashboard.html?upgrade=cancel',
+      allow_promotion_codes: true
+    });
+
+    // Listen for the extension to write back the URL / sessionId
+    sessionRef.onSnapshot(async (snap) => {
       const data = snap.data();
       if (!data) return;
+
       if (data.error) {
+        alert('Stripe error: ' + data.error.message);
         console.error('Stripe Checkout error:', data.error);
-        alert(data.error.message || 'Checkout failed.');
+        return;
       }
+
+      // Preferred: extension returns a direct URL to redirect to
       if (data.url) {
-        // Redirect to Stripe-hosted Checkout
         window.location.assign(data.url);
+        return;
+      }
+
+      // Fallback: some versions return sessionId; needs Stripe.js
+      if (data.sessionId) {
+        const stripe = Stripe('pk_test_xxx_replace_with_publishable_key'); // optional if using url
+        const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+        if (error) {
+          alert(error.message || 'Stripe redirect failed');
+          console.error(error);
+        }
       }
     });
   } catch (err) {
-    console.error('upgradePro() failed:', err);
-    alert(err.message || 'Something went wrong starting Checkout.');
+    console.error('upgradePro failed:', err);
+    alert(err.message || 'Upgrade failed. Check console & Firebase logs.');
   }
 };
+
+
 
 
 
