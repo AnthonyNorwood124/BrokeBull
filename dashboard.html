@@ -4,240 +4,53 @@
   <meta charset="utf-8" />
   <title>BrokeBull — Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Your site styles -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Firebase (Compat for static hosting) -->
+  <!-- Firebase compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
 
-  <!-- Must come AFTER the SDKs -->
-  <script src="firebase.js"></script>
+  <!-- Stripe.js (needed only if extension returns sessionId instead of url) -->
+  <script src="https://js.stripe.com/v3"></script>
+
+  <!-- Your firebase.js from the repo -->
+  <script defer src="firebase.js"></script>
+
+  <style>
+    .btn { padding:10px 16px; border:1px solid #6A0DAD; border-radius:6px; background:#6A0DAD; color:#fff; cursor:pointer; }
+    .wrap { max-width:960px; margin:2rem auto; padding:1rem; }
+  </style>
 </head>
 <body>
   <header class="hero">
     <img class="logo" src="images/logo.jpg" alt="BrokeBull" />
     <h1>Welcome to BrokeBull</h1>
-    <div>
-      <button onclick="logout()">Logout</button>
-    </div>
+    <div><button class="btn" onclick="logout()">Logout</button></div>
   </header>
 
-  <!-- Simple loading placeholder while auth session restores -->
-  <div id="loading" style="color:#bbb;text-align:center;margin:24px 0;">Loading…</div>
+  <main class="wrap">
+    <section id="basicContent">
+      <h2>Basic Access</h2>
+      <p>You’re in preview mode. Upgrade to unlock the full Pro experience.</p>
+      <button class="btn" onclick="upgradePro()">Join Pro ($19/mo)</button>
+      <div id="status" style="margin-top:10px;"></div>
+    </section>
 
-  <!-- PRO: hidden by default; shown when users/{uid}.role === 'pro' -->
-  <section id="proContent" style="display:none;">
-    <h2>Pro Dashboard</h2>
-    <ul>
-      <li>Full Stage-2 Watchlist</li>
-      <li>Daily Market Insights</li>
-      <li>Weekly Pro Newsletter</li>
-    </ul>
-    <!-- Add your Pro modules here -->
-  </section>
-
-  <!-- BASIC: hidden by default; shown when role !== 'pro' -->
-  <section id="basicContent" style="display:none;">
-    <h2>Basic Access</h2>
-    <p>You're in preview mode. Upgrade to unlock the full Pro experience.</p>
-    <button class="btn" onclick="upgradePro()">Join Pro ($19/mo)</button>
-  <!-- ===== BASIC (Free) ===== -->
-<section id="basicContent" class="dash-section">
-  <div class="container">
-    <h2>Basic Access</h2>
-
-    <!-- 2-column grid -->
-    <div class="grid-2">
-      <!-- Trending Stocks -->
-      <article class="panel">
-        <h3>Trending Stocks</h3>
-        <div class="tradingview-widget-container">
-          <div class="tradingview-widget-container__widget"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-hotlists.js" async>
-          {
-            "colorTheme": "dark",
-            "dateRange": "1D",
-            "exchange": "US",
-            "showChart": true,
-            "locale": "en",
-            "isTransparent": true,
-            "largeChartUrl": "",
-            "width": "100%",
-            "height": 420
-          }
-          </script>
-        </div>
-      </article>
-
-      <!-- Market News -->
-      <article class="panel">
-        <h3>Market News</h3>
-        <div class="tradingview-widget-container">
-          <div class="tradingview-widget-container__widget"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
-          {
-            "feedMode": "market",
-            "market": "stock",
-            "isTransparent": true,
-            "displayMode": "regular",
-            "width": "100%",
-            "height": 420,
-            "colorTheme": "dark",
-            "locale": "en"
-          }
-          </script>
-        </div>
-      </article>
-
-      <!-- Newsletter -->
-      <article class="panel">
-        <h3>BrokeBull Newsletter</h3>
-        <p>Get our weekly briefings and watchlists sent to your inbox.</p>
-        <a class="btn btn-primary" target="_blank" rel="noopener"
-           href="https://newsletter.brokebullinvestments.com/subscribe">Subscribe</a>
-      </article>
-
-      <!-- Economic Calendar -->
-      <article class="panel">
-        <h3>Weekly Economic Calendar</h3>
-        <div class="tradingview-widget-container">
-          <div class="tradingview-widget-container__widget"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-          {
-            "colorTheme": "dark",
-            "isTransparent": true,
-            "width": "100%",
-            "height": 420,
-            "locale": "en",
-            "importanceFilter": "-1,0,1"   /* show low/med/high importance */
-          }
-          </script>
-        </div>
-      </article>
-    </div>
-
-    <div class="panel" style="margin-top:16px;">
-      <p>Want everything? Unlock the full Pro experience.</p>
-      <button class="btn btn-outline" onclick="upgradePro()">Join Pro ($19/mo)</button>
-    </div>
-  </div>
-</section>
-
-<!-- ===== PRO (Gated) ===== -->
-<section id="proContent" class="dash-section" style="display:none;">
-  <div class="container">
-    <h2>Pro Dashboard</h2>
-
-    <div class="grid-2">
-      <!-- Stage 2 Algo Watchlist (static sample rows – replace with live data later) -->
-      <article class="panel">
-        <h3>Stage 2 Algo Watchlist</h3>
-        <table class="watchlist">
-          <thead>
-            <tr>
-              <th>Ticker</th><th>Name</th><th>Setup</th><th>Notes</th>
-            </tr>
-          </thead>
-          <tbody id="watchlistBody">
-            <tr><td>TBD</td><td>Example Corp</td><td>Breakout</td><td>Above 50/200MA, volume rising</td></tr>
-            <tr><td>TBD</td><td>Momentum Co</td><td>Pullback</td><td>Watching for higher low</td></tr>
-          </tbody>
-        </table>
-      </article>
-
-      <!-- Upgrades/Downgrades (placeholder list) -->
-      <article class="panel">
-        <h3>Daily Upgrades & Downgrades</h3>
-        <ul class="ratings-list" id="ratingsList">
-          <li><strong>ABC</strong> — Upgrade to Buy (Broker X)</li>
-          <li><strong>XYZ</strong> — Downgrade to Hold (Broker Y)</li>
-          <li><strong>MNO</strong> — Price Target ↑ to 85</li>
-        </ul>
-        <p class="note">Tip: We can wire this to a Google Sheet or Firestore later.</p>
-      </article>
-
-      <!-- Founder Q&A -->
-      <article class="panel">
-        <h3>Founder Q&A</h3>
-        <p>Ask Tony anything about setups, risk, or thesis.</p>
-        <a class="btn btn-outline" target="_blank" rel="noopener"
-           href="https://docs.google.com/forms/">Submit a Question</a>
-      </article>
-
-      <!-- Market Overview (extra widget for Pro) -->
-      <article class="panel">
-        <h3>Market Overview</h3>
-        <div class="tradingview-widget-container">
-          <div class="tradingview-widget-container__widget"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-          {
-            "colorTheme": "dark",
-            "dateRange": "1D",
-            "showChart": true,
-            "locale": "en",
-            "isTransparent": true,
-            "width": "100%",
-            "height": 420,
-            "tabs": [
-              { "title": "Indices", "symbols": [
-                { "s":"FOREXCOM:SPXUSD", "d":"S&P 500" },
-                { "s":"FOREXCOM:NSXUSD", "d":"Nasdaq 100" },
-                { "s":"FOREXCOM:DJI", "d":"Dow 30" }
-              ]}
-            ]
-          }
-          </script>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
+    <section id="proContent" style="display:none;">
+      <h2>Pro Dashboard</h2>
+      <ul>
+        <li>Full Stage-2 Watchlist</li>
+        <li>Daily Market Insights</li>
+        <li>Weekly Pro Newsletter</li>
+      </ul>
+    </section>
+  </main>
 
   <script>
-    // IMPORTANT:
-    // Do NOT use auth.currentUser synchronously.
-    // Wait for onAuthStateChanged, then fetch role and paint UI.
-
+    // Render gating once firebase.js loads
     document.addEventListener('DOMContentLoaded', () => {
-      const auth = firebase.auth();         // use the initialized app
-      const db   = firebase.firestore();
-
-      const loading = document.getElementById('loading');
-      const proEl   = document.getElementById('proContent');
-      const basicEl = document.getElementById('basicContent');
-
-      auth.onAuthStateChanged(async (user) => {
-        if (!user) {
-          // Not signed in -> send to login
-          window.location.replace('login.html');
-          return;
-        }
-
-        try {
-          const snap = await db.collection('users').doc(user.uid).get();
-          const role = snap.exists && snap.data().role ? snap.data().role : 'basic';
-
-          if (loading) loading.style.display = 'none';
-
-          if (role === 'pro') {
-            if (proEl)   proEl.style.display   = 'block';
-            if (basicEl) basicEl.style.display = 'none';
-          } else {
-            if (proEl)   proEl.style.display   = 'none';
-            if (basicEl) basicEl.style.display = 'block';
-          }
-        } catch (err) {
-          console.error('Role fetch failed:', err);
-          if (loading) loading.style.display = 'none';
-          // Fallback: show Basic
-          if (proEl)   proEl.style.display   = 'none';
-          if (basicEl) basicEl.style.display = 'block';
-        }
-      });
+      if (typeof renderDashboard === 'function') renderDashboard();
     });
   </script>
 </body>
