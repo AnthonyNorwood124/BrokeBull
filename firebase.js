@@ -201,7 +201,7 @@ window.upgradePro = async function upgradePro() {
 
       // Fallback: some versions return sessionId; needs Stripe.js
       if (data.sessionId) {
-        const stripe = Stripe('pk_test_xxx_replace_with_publishable_key'); // optional if using url
+        const stripe = Stripe('pk_test_51RwNeh0PKkpPJFZAV0rAShHtE7uNKQ36xc064JloSlVUgCdpiliIynyFfwxm65sdEgftcp0dv9gh8OotZXxrpid000QSP9SqZk'); // optional if using url
         const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
         if (error) {
           alert(error.message || 'Stripe redirect failed');
