@@ -13,22 +13,8 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
   <script src="firebase.js"></script>
 </head>
-  <script>
-(function(){
-  const css = `
-    body::after { background:none !important; opacity:0 !important; }
-    body::before { opacity:0 !important; filter:none !important; background:none !important; }
-    .what-we-do,.pricing,.founder { background:transparent !important; }
-    .card,.panel { background:#121216 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
-    .mix-blend-overlay,.tint,.overlay,.scrim,.veil { mix-blend-mode:normal !important; background:transparent !important; display:none !important; pointer-events:none !important; }
-  `;
-  const s = document.createElement('style');
-  s.textContent = css;
-  document.head.appendChild(s);
-})();
-</script>
 
-<body>
+<body class="plan-pro">
   <header class="hero">
     <img class="logo" src="images/logo.jpg" alt="BrokeBull" />
     <h1>BrokeBull — Pro</h1>
@@ -43,7 +29,8 @@
   <div id="loading" style="color:#bbb;text-align:center;margin:24px 0;">Loading…</div>
 
   <main id="content" class="container" style="max-width:1100px;margin:0 auto;padding:20px;display:none;">
-    <!-- Pro gets everything Basic has -->
+
+    <!-- Market Overview -->
     <section>
       <h2>Market Overview</h2>
       <div class="tradingview-widget-container" style="height:520px;">
@@ -61,8 +48,8 @@
             {
               "title": "US Stocks",
               "symbols": [
-                {"s": "NASDAQ:AAPL"}, {"s": "NASDAQ:NVDA"}, {"s": "NASDAQ:TSLA"},
-                {"s": "NASDAQ:MSFT"}, {"s": "NYSE:PLTR"}, {"s": "NYSE:SHOP"}
+                {"s":"NASDAQ:AAPL"}, {"s":"NASDAQ:NVDA"}, {"s":"NASDAQ:TSLA"},
+                {"s":"NASDAQ:MSFT"}, {"s":"NYSE:PLTR"}, {"s":"NYSE:SHOP"}
               ]
             }
           ]
@@ -71,6 +58,7 @@
       </div>
     </section>
 
+    <!-- Market News -->
     <section>
       <h2>Market News</h2>
       <div class="tradingview-widget-container" style="height:520px;">
@@ -89,6 +77,7 @@
       </div>
     </section>
 
+    <!-- Economic Calendar -->
     <section>
       <h2>Economic Calendar</h2>
       <div class="tradingview-widget-container" style="height:520px;">
@@ -106,7 +95,51 @@
       </div>
     </section>
 
-    <!-- Pro-only: Founder Q&A (Formspree endpoint you shared earlier) -->
+    <!-- Pro: Advanced Real-Time Chart -->
+    <section>
+      <h2>Advanced Chart</h2>
+      <div class="tradingview-widget-container" style="margin-bottom:16px;">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+        {
+          "autosize": true,
+          "symbol": "NASDAQ:QQQ",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "dark",
+          "style": "1",
+          "locale": "en",
+          "allow_symbol_change": true,
+          "withdateranges": true,
+          "hide_top_toolbar": false,
+          "save_image": false,
+          "studies": ["MASimple@tv-basicstudies","RSI@tv-basicstudies","MACD@tv-basicstudies"]
+        }
+        </script>
+      </div>
+    </section>
+
+    <!-- Pro: Stock Screener -->
+    <section>
+      <h2>Stock Screener</h2>
+      <div class="tradingview-widget-container" style="margin-bottom:16px;">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
+        {
+          "width": "100%",
+          "height": 600,
+          "defaultColumn": "overview",
+          "screener_type": "stock",
+          "displayCurrency": "USD",
+          "colorTheme": "dark",
+          "locale": "en",
+          "isTransparent": false
+        }
+        </script>
+      </div>
+    </section>
+
+    <!-- Pro: Founder Q&A -->
     <section>
       <h2>Founder Q&A</h2>
       <p>Submit questions for Tony’s weekly Q&A.</p>
@@ -117,7 +150,7 @@
       </form>
     </section>
 
-    <!-- Pro-only: Stage 2 Algo Watchlist (static for now; can wire JSON later) -->
+    <!-- Pro: Stage 2 Algo Watchlist -->
     <section>
       <h2>Stage-2 Algo Watchlist</h2>
       <ul class="watchlist">
@@ -126,75 +159,12 @@
         <li><strong>NVDA</strong> — Flag forming; relative strength intact</li>
         <li><strong>PLTR</strong> — Retest of prior breakout area; risk-managed entries only</li>
       </ul>
-      <p class="tiny">Want this driven by a JSON file in the repo (editable without code)? Say the word and I’ll wire the fetch.</p>
-    </section>
-
-    <!-- Pro-only: Upgrades / Downgrades (manual for now) -->
-    <section>
-      <h2>Price Target Changes (Upgrades/Downgrades)</h2>
-      <table class="table">
-        <thead><tr><th>Symbol</th><th>Firm</th><th>Action</th><th>From</th><th>To</th><th>Date</th></tr></thead>
-        <tbody>
-          <tr><td>MSFT</td><td>Example Capital</td><td>Upgrade</td><td>Hold</td><td>Buy</td><td>2025-08-01</td></tr>
-          <tr><td>TSLA</td><td>Alpha Bank</td><td>Downgrade</td><td>Buy</td><td>Hold</td><td>2025-08-02</td></tr>
-        </tbody>
-      </table>
-      <p class="tiny">We can automate this later via a webhook/API; starting manual keeps ops simple.</p>
+      <p class="tiny">We can make this auto-populate from JSON in the repo. Low lift.</p>
     </section>
   </main>
-<!-- Advanced Real-Time Chart -->
-<div class="tradingview-widget-container" style="margin-bottom:16px;">
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-  {
-    "autosize": true,
-    "symbol": "NASDAQ:QQQ",
-    "interval": "D",
-    "timezone": "Etc/UTC",
-    "theme": "dark",
-    "style": "1",
-    "locale": "en",
-    "allow_symbol_change": true,
-    "withdateranges": true,
-    "hide_top_toolbar": false,
-    "save_image": false,
-    "studies": ["MASimple@tv-basicstudies","RSI@tv-basicstudies","MACD@tv-basicstudies"]
-  }
-  </script>
-</div>
-
-<!-- Stock Screener -->
-<div class="tradingview-widget-container" style="margin-bottom:16px;">
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
-  {
-    "width": "100%",
-    "height": 600,
-    "defaultColumn": "overview",
-    "screener_type": "stock",
-    "displayCurrency": "USD",
-    "colorTheme": "dark",
-    "locale": "en",
-    "isTransparent": false
-  }
-  </script>
-</div>
-
-<!-- Economic Calendar -->
-<div class="tradingview-widget-container">
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-  {
-    "width": "100%",
-    "height": 520,
-    "importanceFilter": "-1,0,1",
-    "countryFilter": "US",
-    "colorTheme": "dark",
-    "isTransparent": false,
-    "locale": "en"
-  }
-  </script>
-</div>
 
   <script>
-    // Require auth + role === 'pro'. If not pro, send to basic with upgrade CTA.
+    // Require auth + role === 'pro'
     document.addEventListener('DOMContentLoaded', () => {
       const auth = firebase.auth();
       const db   = firebase.firestore();
@@ -210,7 +180,6 @@
         try {
           const snap = await db.collection('users').doc(user.uid).get();
           const role = snap.exists && snap.data().role ? snap.data().role : 'basic';
-
           if (role !== 'pro') {
             window.location.replace('basic.html?upgrade=1');
             return;
