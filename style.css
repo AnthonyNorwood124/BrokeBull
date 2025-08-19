@@ -1,6 +1,5 @@
 /* ================================
    BrokeBull Investments – style.css
-   (drop-in replacement)
    ================================ */
 
 /* Base / reset */
@@ -24,77 +23,49 @@ body{
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
   color: var(--text);
-  background: #000;            /* base behind the overlay */
+  background: #000;
   line-height: 1.45;
 }
 
-/* ----- Candlestick overlay (behind everything) ----- */
+/* ----- Sitewide background (landing/index/dashboard only) ----- */
 body::before{
   content:"";
   position: fixed; inset:0;
   z-index: 0;
   background: url('images/candlesticks.png') center/cover no-repeat;
-  opacity: .22;                      /* tweak 0.15–0.35 to taste */
+  opacity: .22;
   pointer-events: none;
   filter: saturate(1.05) contrast(1.02);
 }
-/* Slight vignette for readability */
 body::after{
   content:"";
   position: fixed; inset:0;
   z-index: 0;
   background:
-    radial-gradient(1500px 600px at 50% -10%, rgba(0,0,0,.0), rgba(0,0,0,.55)),
-    radial-gradient(1400px 700px at 50% 120%, rgba(0,0,0,.0), rgba(0,0,0,.6));
+    radial-gradient(1500px 600px at 50% -10%, rgba(0,0,0,0), rgba(0,0,0,.55)),
+    radial-gradient(1400px 700px at 50% 120%, rgba(0,0,0,0), rgba(0,0,0,.6));
   pointer-events:none;
 }
 
 /* Layout helpers */
 .container{ width:min(1200px,92vw); margin:0 auto; }
-
-/* Elevate main sections above overlay */
 .hero, .what-we-do, .pricing, .testimonials, .founder { position: relative; z-index: 1; }
 
 /* ---------------- Hero ---------------- */
 .hero{
-  background: linear-gradient(140deg, rgba(108,46,184,.96) 0%, rgba(44,0,84,.92) 50%, rgba(15,15,18,.92) 100%);
+  /* opaque gradient to avoid ‘tint’ feel on plan pages */
+  background: linear-gradient(140deg, #6c2eb8 0%, #2c0054 50%, #0f0f12 100%);
   padding: clamp(36px, 6vw, 72px) 0;
   text-align: center;
 }
-
-.hero-bar{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:18px;
-}
-
+.hero-bar{ display:flex; flex-direction:column; align-items:center; gap:18px; }
 .logo{ width: 100px; height:auto; }
-.logo--xl{
-  width: 140px;                       /* increase/decrease as desired */
-  filter: drop-shadow(0 10px 18px rgba(0,0,0,.55));
-}
+.logo--xl{ width: 140px; filter: drop-shadow(0 10px 18px rgba(0,0,0,.55)); }
+.hero h1{ margin: 10px 0 6px; font-size: clamp(2.2rem, 4.8vw, 3.4rem); text-shadow: 0 8px 24px rgba(108,46,184,.45); }
+.subtitle{ margin: 0 auto; opacity:.9; }
 
-.hero h1{
-  margin: 10px 0 6px;
-  font-size: clamp(2.2rem, 4.8vw, 3.4rem);
-  text-shadow: 0 8px 24px rgba(108,46,184,.45);
-}
-
-.subtitle{
-  margin: 0 auto;
-  opacity:.9;
-}
-
-/* Auth actions (always visible) */
-.auth-links{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-
-/* Buttons */
+/* Auth links / Buttons */
+.auth-links{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
 .btn{
   --bg:#fff; --fg:#000; --bd:transparent;
   display:inline-flex; align-items:center; justify-content:center;
@@ -108,33 +79,22 @@ body::after{
 .btn-outline{ --bg: transparent; --fg:#fff; --bd: rgba(108,46,184,.55); }
 .btn-outline:hover{ background: rgba(255,255,255,.08); border-color: var(--purple-400); }
 
-/* -------------- What We Do -------------- */
+/* -------------- Optional content sections (landing) -------------- */
 .what-we-do{
   padding: clamp(36px, 5vw, 64px) 0;
   text-align:center;
   background: rgba(0,0,0,.35);
 }
-.what-we-do p{
-  width:min(900px, 92vw);
-  margin: 10px auto 0;
-  color: var(--subtle);
-}
+.what-we-do p{ width:min(900px, 92vw); margin: 10px auto 0; color: var(--subtle); }
 
-/* -------------- Pricing (Glass Cards) -------------- */
 .pricing{
   padding: clamp(36px, 6vw, 72px) 0;
   background: rgba(0,0,0,.55);
   text-align:center;
 }
-
-.card-container{
-  display:grid; gap:22px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  width:min(1100px, 92vw); margin: 14px auto 0;
-}
-
+.card-container{ display:grid; gap:22px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); width:min(1100px, 92vw); margin: 14px auto 0; }
 .card{
-  background: var(--card-bg);               /* translucent, not solid white */
+  background: var(--card-bg);
   color:#fff;
   border: 1px solid rgba(108,46,184,.55);
   backdrop-filter: blur(8px) saturate(120%);
@@ -147,100 +107,30 @@ body::after{
 .card h3{ margin:6px 0 10px; }
 .card ul{ margin:0 0 14px; padding-left:18px; }
 .card li{ color: var(--subtle); }
+.card:hover{ transform: translateY(-6px); box-shadow: 0 14px 32px rgba(108,46,184,.35); border-color:#fff; }
+.card .btn{ --bg:#fff; --fg:var(--purple); --bd:var(--purple); border-radius:8px; }
+.card .btn:hover{ --bg:var(--purple); --fg:#fff; transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 22px rgba(108,46,184,.35); }
 
-.card:hover{
-  transform: translateY(-6px);
-  box-shadow: 0 14px 32px rgba(108,46,184,.35);
-  border-color:#fff;
-}
-
-/* Pricing buttons: white base → purple hover */
-.card .btn{
-  --bg:#fff; --fg:var(--purple); --bd:var(--purple);
-  border-radius:8px;
-}
-.card .btn:hover{
-  --bg:var(--purple); --fg:#fff;
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 22px rgba(108,46,184,.35);
-}
-
-/* -------------- Testimonials -------------- */
-.testimonials{
-  padding: clamp(36px, 6vw, 72px) 0;
-  text-align:center;
-}
-.testimonial-row{
-  margin-top: 16px;
-  display:grid; gap:22px;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  width:min(1100px, 92vw); margin-inline:auto;
-}
-.testimonial{
-  background: rgba(18,18,22,.92);
-  border: 1px solid rgba(108,46,184,.55);
-  border-radius: 12px;
-  padding: 16px 14px;
-  box-shadow: 0 6px 16px rgba(0,0,0,.35);
-  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-}
-.testimonial:hover{
-  transform: translateY(-6px);
-  box-shadow: 0 14px 32px rgba(108,46,184,.35);
-  border-color: var(--purple-400);
-}
-.testimonial img{
-  width: 88px; height: 88px; object-fit: cover; border-radius:50%;
-  border:2px solid var(--purple);
-  box-shadow: 0 6px 16px rgba(108,46,184,.35);
-  margin-bottom: 10px;
-}
+.testimonials{ padding: clamp(36px, 6vw, 72px) 0; text-align:center; }
+.testimonial-row{ margin-top: 16px; display:grid; gap:22px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); width:min(1100px, 92vw); margin-inline:auto; }
+.testimonial{ background: rgba(18,18,22,.92); border: 1px solid rgba(108,46,184,.55); border-radius: 12px; padding: 16px 14px; box-shadow: 0 6px 16px rgba(0,0,0,.35); transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+.testimonial:hover{ transform: translateY(-6px); box-shadow: 0 14px 32px rgba(108,46,184,.35); border-color: var(--purple-400); }
+.testimonial img{ width: 88px; height: 88px; object-fit: cover; border-radius:50%; border:2px solid var(--purple); box-shadow: 0 6px 16px rgba(108,46,184,.35); margin-bottom: 10px; }
 .testimonial p{ color:#cfcfe4; margin:0; font-style:italic; }
 
-/* -------------- Founder -------------- */
 .founder{
   padding: clamp(40px, 6vw, 72px) 0;
   text-align: center;
   background: rgba(0,0,0,.65);
 }
-.founder-photo{
-  width: 200px; height:auto;
-  border-radius: 12px;
-  margin-bottom: 16px;
-  box-shadow: 0 10px 22px rgba(108,46,184,.35);
-  border: 1px solid rgba(108,46,184,.45);
-}
-.founder-bio{
-  width:min(700px, 92vw); margin: 0 auto;
-}
-.founder-bio p{
-  color: var(--subtle);
-  font-size: 1rem; line-height: 1.65;
-}
+.founder-photo{ width: 200px; height:auto; border-radius: 12px; margin-bottom: 16px; box-shadow: 0 10px 22px rgba(108,46,184,.35); border: 1px solid rgba(108,46,184,.45); }
+.founder-bio{ width:min(700px, 92vw); margin: 0 auto; }
+.founder-bio p{ color: var(--subtle); font-size: 1rem; line-height: 1.65; }
 
-/* -------------- Utilities -------------- */
-h2{ margin:0 0 10px; font-size: clamp(1.6rem, 3.8vw, 2.1rem); }
-a{ color: #e6dcff; }
-a:hover{ color: #fff; }
-
-/* Responsive tweaks */
-@media (max-width: 520px){
-  .logo--xl{ width: 120px; }
-  .auth-links .btn{ padding: 9px 14px; }
-}
-/* =======================
-   Dashboard layout polish
-   ======================= */
+/* -------------- Dashboard / Panels -------------- */
 .dash-section { padding: clamp(28px, 5vw, 60px) 0; }
-
-.grid-2{
-  display:grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px;
-}
-@media (max-width: 980px){
-  .grid-2{ grid-template-columns: 1fr; }
-}
+.grid-2{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+@media (max-width: 980px){ .grid-2{ grid-template-columns: 1fr; } }
 
 .panel{
   background: rgba(18,18,22,.66);
@@ -253,89 +143,31 @@ a:hover{ color: #fff; }
 }
 .panel h3{ margin: 0 0 10px; }
 
-.watchlist{
-  width: 100%;
-  border-collapse: collapse;
-  font-size: .95rem;
-}
-.watchlist th, .watchlist td{
-  padding: 10px 8px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  text-align: left;
-  color: #e9e9f3;
-}
+.watchlist{ width: 100%; border-collapse: collapse; font-size: .95rem; }
+.watchlist th, .watchlist td{ padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,.08); text-align: left; color: #e9e9f3; }
 .watchlist th{ color:#fff; }
 
-.ratings-list{
-  margin: 8px 0 0; padding-left: 18px;
-  color: #d6d6ee;
-}
+.ratings-list{ margin: 8px 0 0; padding-left: 18px; color: #d6d6ee; }
 .ratings-list li{ margin: 6px 0; }
 .note{ opacity: .75; font-size: .9rem; margin-top: 10px; }
 
-/* Keep widgets on top of the bg overlay */
+h2{ margin:0 0 10px; font-size: clamp(1.6rem, 3.8vw, 2.1rem); }
+a{ color: #e6dcff; } a:hover{ color: #fff; }
+
+/* Keep widgets on top of bg overlay */
 .tradingview-widget-container{ position: relative; z-index: 1; }
-/* ===== BrokeBull: anti-flicker + stable overlay overrides ===== */
 
-/* 1) Hide both dashboards until Firebase decides which to show */
-#basicContent,
-#proContent {
-  display: none;
-}
-
-/* 2) Make the candlestick overlay stable across browsers/GPUs */
-html, body { background-color: #000; }
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: url('images/candlesticks.png') center / cover no-repeat;
-  opacity: 0.18;              /* tweak to taste */
-  z-index: 0;                  /* keep >= 0 to avoid compositor bugs */
-  pointer-events: none;
-  transform: translateZ(0);    /* own layer == fewer repaints */
-  backface-visibility: hidden;
-  will-change: transform;
-}
-
-/* 3) Ensure your real content is above the overlay */
-header, main, .hero, .pricing, .testimonials, .founder {
-  position: relative;
-  z-index: 1;
-}
-/* ==== BrokeBull hotfix: remove unintended page tint/blur/opacity ==== */
-body, .page, .hero, .tier, .tier::before, .tier::after {
-  filter: none !important;
-  opacity: 1 !important;
-  backdrop-filter: none !important;
-}
-.tinted, .tint, .overlay, .scrim, .veil { 
-  background: transparent !important;
-  display: none !important;
-  pointer-events: none !important;
-}
-/* Some Webflow clones add a darkening mix-blend overlay on sections */
-.section--overlay, .overlay--dark, .mix-blend-overlay { 
-  mix-blend-mode: normal !important;
-  background: transparent !important;
-}
-/* ===== De-tint Basic & Pro pages (hard overrides) ===== */
-
-/* 1) Kill the global vignette + background overlay on these pages */
+/* ======== DE-TINT: Plan Pages (Basic & Pro) ======== */
+/* Remove global overlays on plan pages only */
+body.plan-basic::before,
 body.plan-basic::after,
+body.plan-pro::before,
 body.plan-pro::after {
   background: none !important;
   opacity: 0 !important;
 }
-body.plan-basic::before,
-body.plan-pro::before {
-  opacity: 0 !important;        /* hide candlesticks behind page */
-  filter: none !important;
-  background: none !important;
-}
 
-/* 2) Remove semi-transparent section washes */
+/* Remove semi-transparent washes on plan pages */
 body.plan-basic .what-we-do,
 body.plan-basic .pricing,
 body.plan-basic .founder,
@@ -345,17 +177,17 @@ body.plan-pro .founder {
   background: transparent !important;
 }
 
-/* 3) Make cards/panels solid (no frosted-glass tint) */
+/* Make cards/panels solid on plan pages */
 body.plan-basic .card,
 body.plan-basic .panel,
 body.plan-pro .card,
 body.plan-pro .panel {
-  background: #121216 !important;          /* solid, no see-through */
+  background: #121216 !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
-/* 4) Just in case any utility overlays slipped in */
+/* Kill any stray overlays */
 body.plan-basic .mix-blend-overlay,
 body.plan-pro  .mix-blend-overlay,
 body.plan-basic .tint, body.plan-pro .tint,
@@ -366,5 +198,11 @@ body.plan-basic .veil, body.plan-pro .veil {
   background: transparent !important;
   display: none !important;
   pointer-events: none !important;
+}
+
+/* Responsive */
+@media (max-width: 520px){
+  .logo--xl{ width: 120px; }
+  .auth-links .btn{ padding: 9px 14px; }
 }
 
