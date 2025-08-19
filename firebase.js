@@ -5,7 +5,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyC9Hyz2elP8APMTXJsG0_LGW7mRY5Q4FUU",
   authDomain: "brokebull-2ed34.firebaseapp.com",
   projectId: "brokebull-2ed34",
-  storageBucket: "brokebull-2ed34.appspot.com", // <- correct bucket name
+  storageBucket: "brokebull-2ed34.appspot.com",
   messagingSenderId: "228477100804",
   appId: "1:228477100804:web:19c7d99dafda20822be651"
 };
@@ -17,27 +17,30 @@ if (!firebase.apps?.length) {
 const auth = firebase.auth();
 const db   = firebase.firestore();
 
-/* Helpers */
+/* ===== Helpers ===== */
 function setStatus(msg, isError = false) {
   const el = document.getElementById('status');
   if (!el) return;
   el.textContent = msg || '';
   el.style.color = isError ? '#ff6b6b' : '#ffdf6e';
 }
+
+/* Only allow local relative redirects; default to dashboard.html */
 function getNextUrl(def = 'dashboard.html') {
   try {
     const url = new URL(window.location.href);
     const nxt = url.searchParams.get('next');
-    // Prevent open redirects: only allow local relative targets
-    if (nxt && !/^https?:/i.test(nxt)) return nxt;
+    if (nxt && !/^https?:/i.test(nxt)) {
+      return nxt.replace(/^\/*/, '') || def;
+    }
   } catch (_) {}
   return def;
 }
 
-/* 3) If already signed in and user is on login page → go to dashboard/next */
+/* 3) If already signed in and we're on login.html → go to next/dashboard */
 auth.onAuthStateChanged((user) => {
-  if (user && /login\.html$/i.test(location.pathname)) {
-    window.location.href = getNextUrl();
+  if (user && /\/login\.html$/i.test(location.pathname)) {
+    window.location.replace(getNextUrl());
   }
 });
 
@@ -53,13 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
   signInBtn?.addEventListener('click', async () => {
     try {
       setStatus('Signing in…');
-      const email = emailEl.value.trim();
-      const pass  = passEl.value;
+      const email = emailEl?.value.trim();
+      const pass  = passEl?.value;
       if (!email || !pass) throw new Error('Enter email and password.');
       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       await auth.signInWithEmailAndPassword(email, pass);
-      // onAuthStateChanged will redirect, but we can also proactively do it:
-      window.location.href = getNextUrl();
+      window.location.replace(getNextUrl());
     } catch (err) {
       console.error(err);
       setStatus(err.message, true);
@@ -70,24 +72,21 @@ document.addEventListener('DOMContentLoaded', () => {
   createBtn?.addEventListener('click', async () => {
     try {
       setStatus('Creating account…');
-      const email = emailEl.value.trim();
-      const pass  = passEl.value;
+      const email = emailEl?.value.trim();
+      const pass  = passEl?.value;
       if (!email || !pass) throw new Error('Enter email and password.');
 
       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const { user } = await auth.createUserWithEmailAndPassword(email, pass);
 
-      // Non-blocking user profile write
+      // Non-blocking user profile write (role = basic by default)
       db.collection('users').doc(user.uid).set({
         email,
         role: 'basic',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).catch(err => {
-        console.warn('Firestore profile write failed (non-blocking):', err);
-      });
+      }).catch(err => console.warn('Profile write (non-blocking):', err));
 
-      setStatus('Account created! Redirecting…');
-      window.location.replace(getNextUrl()); // immediate redirect
+      window.location.replace(getNextUrl());
     } catch (err) {
       console.error(err);
       if (err.code === 'auth/email-already-in-use') {
@@ -128,87 +127,58 @@ window.logout = async function logout() {
   }
 };
 
+/* Role-gated render (prevents flash) */
 window.renderDashboard = async function renderDashboard() {
+  const pro    = document.getElementById('proContent');
+  const basic  = document.getElementById('basicContent');
+  const loader = document.getElementById('loading');
+
+  // Hide both initially to prevent any flash
+  if (basic) basic.style.display = 'none';
+  if (pro)   pro.style.display   = 'none';
+
   const user = auth.currentUser;
   if (!user) {
-    window.location.href = 'login.html';
+    window.location.replace('login.html?next=dashboard.html');
     return;
   }
+
   try {
     const snap = await db.collection('users').doc(user.uid).get();
     const role = snap.exists ? (snap.data().role || 'basic') : 'basic';
 
-    const pro   = document.getElementById('proContent');
-    const basic = document.getElementById('basicContent');
-
     if (role === 'pro') {
       if (pro)   pro.style.display   = 'block';
-      if (basic) basic.style.display = 'none';
     } else {
-      if (pro)   pro.style.display   = 'none';
       if (basic) basic.style.display = 'block';
     }
   } catch (err) {
-    console.error(err);
+    console.error('renderDashboard error:', err);
+    if (basic) basic.style.display = 'block';
+  } finally {
+    if (loader) loader.style.display = 'none';
   }
 };
 
-/* 6) Dev path: “Upgrade” sets role=pro and redirects to dashboard
-   Replace with Stripe flow later. */
-// --- Join Pro via Stripe Checkout (Firestore flow) ---
+/* 6) TEMP upgrade (no Stripe) — lets you view Pro now */
 window.upgradePro = async function upgradePro() {
   try {
-    // 1) Must be signed in
     const user = auth.currentUser;
     if (!user) {
-      // bounce to login and come back
       window.location.href = 'login.html?next=dashboard.html';
       return;
     }
-    await db.collection('users')
-
-    // 2) Create a checkout_sessions doc under this user
-    const sessionRef = await db
-      .collection('customers')
-      .doc(user.uid)
-      .set(
-        {
-          role: 'pro',
-          proSince: firebase.firestore.FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      );
-
-    window.location.href = 'dashboard.html';
-      .collection('checkout_sessions')
-      .add({
-        mode: 'subscription',
-        price: 'price_1RwNgQ0PKkpPJFZAkXlbhB31', // <-- your Stripe price ID
-        success_url: window.location.origin + '/dashboard.html?pro=1',
-        cancel_url:  window.location.origin + '/dashboard.html?canceled=1',
-        allow_promotion_codes: true
-      });
-
-    // 3) Wait for the extension to write back { url } or { error }
-    sessionRef.onSnapshot((snap) => {
-      const data = snap.data();
-      if (!data) return;
-      if (data.error) {
-        console.error('Stripe Checkout error:', data.error);
-        alert(data.error.message || 'Checkout failed.');
-      }
-      if (data.url) {
-        // Redirect to Stripe-hosted Checkout
-        window.location.assign(data.url);
-      }
-    });
+    await db.collection('users').doc(user.uid).set(
+      { role: 'pro', proSince: firebase.firestore.FieldValue.serverTimestamp() },
+      { merge: true }
+    );
+    window.location.replace('dashboard.html');
   } catch (err) {
     console.error('upgradePro failed:', err);
-    alert(err.message || 'Failed to upgrade. Check Firestore rules & console.');
-    console.error('upgradePro() failed:', err);
-    alert(err.message || 'Something went wrong starting Checkout.');
+    alert(err.message || 'Upgrade failed.');
   }
 };
+
 
 
 
