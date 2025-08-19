@@ -110,6 +110,84 @@
           "colorTheme": "dark",
           "isTransparent": false
         }
+        <!-- TradingView Ticker Tape -->
+<div class="tradingview-widget-container" style="margin-bottom:16px;">
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+  {
+    "symbols": [
+      {"proName":"AMEX:SPY","title":"SPY"},
+      {"proName":"NASDAQ:QQQ","title":"QQQ"},
+      {"proName":"AMEX:IWM","title":"IWM"},
+      {"proName":"AMEX:DIA","title":"DIA"},
+      {"proName":"NASDAQ:AAPL","title":"AAPL"},
+      {"proName":"NASDAQ:MSFT","title":"MSFT"},
+      {"proName":"NASDAQ:NVDA","title":"NVDA"},
+      {"proName":"NASDAQ:TSLA","title":"TSLA"}
+    ],
+    "showSymbolLogo": true,
+    "isTransparent": false,
+    "displayMode": "adaptive",
+    "colorTheme": "dark",
+    "locale": "en"
+  }
+  </script>
+</div>
+
+<!-- Market Overview (indices + leaders) -->
+<div class="tradingview-widget-container" style="margin-bottom:16px;">
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+  {
+    "colorTheme": "dark",
+    "dateRange": "12M",
+    "showChart": true,
+    "locale": "en",
+    "isTransparent": false,
+    "width": "100%",
+    "height": "640",
+    "tabs": [
+      {
+        "title": "US Indices",
+        "symbols": [
+          {"s":"AMEX:SPY","d":"SPY"},
+          {"s":"NASDAQ:QQQ","d":"QQQ"},
+          {"s":"AMEX:DIA","d":"DIA"},
+          {"s":"AMEX:IWM","d":"IWM"}
+        ]
+      },
+      {
+        "title": "Tech Leaders",
+        "symbols": [
+          {"s":"NASDAQ:NVDA","d":"NVDA"},
+          {"s":"NASDAQ:MSFT","d":"MSFT"},
+          {"s":"NASDAQ:AAPL","d":"AAPL"},
+          {"s":"NASDAQ:TSLA","d":"TSLA"}
+        ]
+      }
+    ]
+  }
+  </script>
+</div>
+
+<!-- Symbol Overview (quick look) -->
+<div class="tradingview-widget-container">
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+  {
+    "symbols": [
+      ["AMEX:SPY|1D"],
+      ["NASDAQ:QQQ|1D"],
+      ["AMEX:IWM|1D"]
+    ],
+    "chartOnly": false,
+    "width": "100%",
+    "height": "400",
+    "locale": "en",
+    "colorTheme": "dark",
+    "autosize": true,
+    "showVolume": true
+  }
+  </script>
+</div>
+
         </script>
       </div>
     </section>
