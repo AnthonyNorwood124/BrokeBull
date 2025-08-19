@@ -6,30 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Firebase Compat (same as other pages) -->
+  <!-- Firebase Compat (match other pages) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="firebase.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
-
+  <script src="firebase.js"></script>
 </head>
-  <script>
-(function(){
-  const css = `
-    body::after { background:none !important; opacity:0 !important; }
-    body::before { opacity:0 !important; filter:none !important; background:none !important; }
-    .what-we-do,.pricing,.founder { background:transparent !important; }
-    .card,.panel { background:#121216 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
-    .mix-blend-overlay,.tint,.overlay,.scrim,.veil { mix-blend-mode:normal !important; background:transparent !important; display:none !important; pointer-events:none !important; }
-  `;
-  const s = document.createElement('style');
-  s.textContent = css;
-  document.head.appendChild(s);
-})();
-</script>
 
-<body>
+<body class="plan-basic">
   <header class="hero">
     <img class="logo" src="images/logo.jpg" alt="BrokeBull" />
     <h1>BrokeBull — Basic</h1>
@@ -43,8 +28,35 @@
 
   <div id="loading" style="color:#bbb;text-align:center;margin:24px 0;">Loading…</div>
 
-  <main class="container" style="max-width:1100px;margin:0 auto;padding:20px;display:none;" id="content">
-    <!-- Trending Stocks (TradingView Market Overview) -->
+  <main id="content" class="container" style="max-width:1100px;margin:0 auto;padding:20px;display:none;">
+
+    <!-- Ticker Tape -->
+    <section>
+      <div class="tradingview-widget-container" style="margin-bottom:16px;">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+        {
+          "symbols": [
+            {"proName":"AMEX:SPY","title":"SPY"},
+            {"proName":"NASDAQ:QQQ","title":"QQQ"},
+            {"proName":"AMEX:IWM","title":"IWM"},
+            {"proName":"AMEX:DIA","title":"DIA"},
+            {"proName":"NASDAQ:AAPL","title":"AAPL"},
+            {"proName":"NASDAQ:MSFT","title":"MSFT"},
+            {"proName":"NASDAQ:NVDA","title":"NVDA"},
+            {"proName":"NASDAQ:TSLA","title":"TSLA"}
+          ],
+          "showSymbolLogo": true,
+          "isTransparent": false,
+          "displayMode": "adaptive",
+          "colorTheme": "dark",
+          "locale": "en"
+        }
+        </script>
+      </div>
+    </section>
+
+    <!-- Trending Stocks (Market Overview) -->
     <section>
       <h2>Trending Stocks</h2>
       <div class="tradingview-widget-container" style="height:520px;">
@@ -85,7 +97,30 @@
       </div>
     </section>
 
-    <!-- Market News (TradingView Timeline) -->
+    <!-- Symbol Overview -->
+    <section>
+      <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+        {
+          "symbols": [
+            ["AMEX:SPY|1D"],
+            ["NASDAQ:QQQ|1D"],
+            ["AMEX:IWM|1D"]
+          ],
+          "chartOnly": false,
+          "width": "100%",
+          "height": "400",
+          "locale": "en",
+          "colorTheme": "dark",
+          "autosize": true,
+          "showVolume": true
+        }
+        </script>
+      </div>
+    </section>
+
+    <!-- Market News -->
     <section>
       <h2>Market News</h2>
       <div class="tradingview-widget-container" style="height:520px;">
@@ -104,14 +139,7 @@
       </div>
     </section>
 
-    <!-- Newsletter CTA -->
-    <section>
-      <h2>Newsletter</h2>
-      <p>Get the BrokeBull newsletter delivered daily.</p>
-      <a class="btn" href="https://newsletter.brokebullinvestments.com/subscribe" target="_blank" rel="noopener">Subscribe on Beehiiv</a>
-    </section>
-
-    <!-- Weekly Economic Calendar (TradingView) -->
+    <!-- Economic Calendar -->
     <section>
       <h2>Economic Calendar</h2>
       <div class="tradingview-widget-container" style="height:520px;">
@@ -125,91 +153,20 @@
           "colorTheme": "dark",
           "isTransparent": false
         }
-        <!-- TradingView Ticker Tape -->
-<div class="tradingview-widget-container" style="margin-bottom:16px;">
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-  {
-    "symbols": [
-      {"proName":"AMEX:SPY","title":"SPY"},
-      {"proName":"NASDAQ:QQQ","title":"QQQ"},
-      {"proName":"AMEX:IWM","title":"IWM"},
-      {"proName":"AMEX:DIA","title":"DIA"},
-      {"proName":"NASDAQ:AAPL","title":"AAPL"},
-      {"proName":"NASDAQ:MSFT","title":"MSFT"},
-      {"proName":"NASDAQ:NVDA","title":"NVDA"},
-      {"proName":"NASDAQ:TSLA","title":"TSLA"}
-    ],
-    "showSymbolLogo": true,
-    "isTransparent": false,
-    "displayMode": "adaptive",
-    "colorTheme": "dark",
-    "locale": "en"
-  }
-  </script>
-</div>
-
-<!-- Market Overview (indices + leaders) -->
-<div class="tradingview-widget-container" style="margin-bottom:16px;">
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-  {
-    "colorTheme": "dark",
-    "dateRange": "12M",
-    "showChart": true,
-    "locale": "en",
-    "isTransparent": false,
-    "width": "100%",
-    "height": "640",
-    "tabs": [
-      {
-        "title": "US Indices",
-        "symbols": [
-          {"s":"AMEX:SPY","d":"SPY"},
-          {"s":"NASDAQ:QQQ","d":"QQQ"},
-          {"s":"AMEX:DIA","d":"DIA"},
-          {"s":"AMEX:IWM","d":"IWM"}
-        ]
-      },
-      {
-        "title": "Tech Leaders",
-        "symbols": [
-          {"s":"NASDAQ:NVDA","d":"NVDA"},
-          {"s":"NASDAQ:MSFT","d":"MSFT"},
-          {"s":"NASDAQ:AAPL","d":"AAPL"},
-          {"s":"NASDAQ:TSLA","d":"TSLA"}
-        ]
-      }
-    ]
-  }
-  </script>
-</div>
-
-<!-- Symbol Overview (quick look) -->
-<div class="tradingview-widget-container">
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-  {
-    "symbols": [
-      ["AMEX:SPY|1D"],
-      ["NASDAQ:QQQ|1D"],
-      ["AMEX:IWM|1D"]
-    ],
-    "chartOnly": false,
-    "width": "100%",
-    "height": "400",
-    "locale": "en",
-    "colorTheme": "dark",
-    "autosize": true,
-    "showVolume": true
-  }
-  </script>
-</div>
-
         </script>
       </div>
+    </section>
+
+    <!-- Newsletter CTA -->
+    <section>
+      <h2>Newsletter</h2>
+      <p>Get the BrokeBull newsletter delivered daily.</p>
+      <a class="btn" href="https://newsletter.brokebullinvestments.com/subscribe" target="_blank" rel="noopener">Subscribe on Beehiiv</a>
     </section>
   </main>
 
   <script>
-    // Require auth; show content once Firebase restores session.
+    // Auth gate; show content once session is restored.
     document.addEventListener('DOMContentLoaded', () => {
       const auth = firebase.auth();
       auth.onAuthStateChanged((user) => {
@@ -226,3 +183,4 @@
   </script>
 </body>
 </html>
+
