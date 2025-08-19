@@ -304,4 +304,20 @@ header, main, .hero, .pricing, .testimonials, .founder {
   position: relative;
   z-index: 1;
 }
+/* ==== BrokeBull hotfix: remove unintended page tint/blur/opacity ==== */
+body, .page, .hero, .tier, .tier::before, .tier::after {
+  filter: none !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+}
+.tinted, .tint, .overlay, .scrim, .veil { 
+  background: transparent !important;
+  display: none !important;
+  pointer-events: none !important;
+}
+/* Some Webflow clones add a darkening mix-blend overlay on sections */
+.section--overlay, .overlay--dark, .mix-blend-overlay { 
+  mix-blend-mode: normal !important;
+  background: transparent !important;
+}
 
