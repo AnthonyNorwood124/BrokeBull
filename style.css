@@ -320,4 +320,51 @@ body, .page, .hero, .tier, .tier::before, .tier::after {
   mix-blend-mode: normal !important;
   background: transparent !important;
 }
+/* ===== De-tint Basic & Pro pages (hard overrides) ===== */
+
+/* 1) Kill the global vignette + background overlay on these pages */
+body.plan-basic::after,
+body.plan-pro::after {
+  background: none !important;
+  opacity: 0 !important;
+}
+body.plan-basic::before,
+body.plan-pro::before {
+  opacity: 0 !important;        /* hide candlesticks behind page */
+  filter: none !important;
+  background: none !important;
+}
+
+/* 2) Remove semi-transparent section washes */
+body.plan-basic .what-we-do,
+body.plan-basic .pricing,
+body.plan-basic .founder,
+body.plan-pro .what-we-do,
+body.plan-pro .pricing,
+body.plan-pro .founder {
+  background: transparent !important;
+}
+
+/* 3) Make cards/panels solid (no frosted-glass tint) */
+body.plan-basic .card,
+body.plan-basic .panel,
+body.plan-pro .card,
+body.plan-pro .panel {
+  background: #121216 !important;          /* solid, no see-through */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 4) Just in case any utility overlays slipped in */
+body.plan-basic .mix-blend-overlay,
+body.plan-pro  .mix-blend-overlay,
+body.plan-basic .tint, body.plan-pro .tint,
+body.plan-basic .overlay, body.plan-pro .overlay,
+body.plan-basic .scrim, body.plan-pro .scrim,
+body.plan-basic .veil, body.plan-pro .veil {
+  mix-blend-mode: normal !important;
+  background: transparent !important;
+  display: none !important;
+  pointer-events: none !important;
+}
 
