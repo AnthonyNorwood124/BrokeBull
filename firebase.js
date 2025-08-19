@@ -24,27 +24,20 @@ function setStatus(msg, isError = false) {
   el.textContent = msg || '';
   el.style.color = isError ? '#ff6b6b' : '#ffdf6e';
 }
-
-/* Only allow local relative redirects; default to dashboard.html */
 function getNextUrl(def = 'dashboard.html') {
   try {
     const url = new URL(window.location.href);
     const nxt = url.searchParams.get('next');
-    if (nxt && !/^https?:/i.test(nxt)) {
-      return nxt.replace(/^\/*/, '') || def;
-    }
+    if (nxt && !/^https?:/i.test(nxt)) return nxt.replace(/^\/*/, '') || def;
   } catch (_) {}
   return def;
 }
+const isLoginPage = /\/login\.html$/i.test(location.pathname);
 
-/* 3) If already signed in and we're on login.html → go to next/dashboard */
-auth.onAuthStateChanged((user) => {
-  if (user && /\/login\.html$/i.test(location.pathname)) {
-    window.location.replace(getNextUrl());
-  }
-});
-
-/* 4) Wire up login page UI (if present) */
+/* 3) Redirect policy
+   - NO auto-redirect on login.html (prevents loops/flicker)
+   - Dashboard enforces auth and role
+*/
 document.addEventListener('DOMContentLoaded', () => {
   const emailEl   = document.getElementById('email');
   const passEl    = document.getElementById('password');
@@ -52,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const createBtn = document.getElementById('createBtn');
   const resetLink = document.getElementById('resetLink');
 
-  // Sign in
+  // Sign in → explicit redirect
   signInBtn?.addEventListener('click', async () => {
     try {
       setStatus('Signing in…');
@@ -68,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Create Account
+  // Create Account → explicit redirect
   createBtn?.addEventListener('click', async () => {
     try {
       setStatus('Creating account…');
@@ -79,12 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const { user } = await auth.createUserWithEmailAndPassword(email, pass);
 
-      // Non-blocking user profile write (role = basic by default)
+      // Non-blocking profile write
       db.collection('users').doc(user.uid).set({
         email,
         role: 'basic',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).catch(err => console.warn('Profile write (non-blocking):', err));
+      }).catch(e => console.warn('Profile write (non-blocking):', e));
 
       window.location.replace(getNextUrl());
     } catch (err) {
@@ -116,7 +109,40 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-/* 5) Shared helpers for dashboard.html */
+/* 4) Dashboard gating (only place we auto-redirect) */
+window.renderDashboard = async function renderDashboard() {
+  const pro    = document.getElementById('proContent');
+  const basic  = document.getElementById('basicContent');
+  const loader = document.getElementById('loading');
+
+  // Hide both initially
+  if (basic) basic.style.display = 'none';
+  if (pro)   pro.style.display   = 'none';
+
+  // Wait for auth state once, then decide
+  auth.onAuthStateChanged(async (user) => {
+    if (!user) {
+      window.location.replace('login.html?next=dashboard.html');
+      return;
+    }
+    try {
+      const snap = await db.collection('users').doc(user.uid).get();
+      const role = snap.exists ? (snap.data().role || 'basic') : 'basic';
+      if (role === 'pro') {
+        if (pro)   pro.style.display   = 'block';
+      } else {
+        if (basic) basic.style.display = 'block';
+      }
+    } catch (err) {
+      console.error('renderDashboard error:', err);
+      if (basic) basic.style.display = 'block';
+    } finally {
+      if (loader) loader.style.display = 'none';
+    }
+  });
+};
+
+/* 5) Logout */
 window.logout = async function logout() {
   try {
     await auth.signOut();
@@ -127,40 +153,7 @@ window.logout = async function logout() {
   }
 };
 
-/* Role-gated render (prevents flash) */
-window.renderDashboard = async function renderDashboard() {
-  const pro    = document.getElementById('proContent');
-  const basic  = document.getElementById('basicContent');
-  const loader = document.getElementById('loading');
-
-  // Hide both initially to prevent any flash
-  if (basic) basic.style.display = 'none';
-  if (pro)   pro.style.display   = 'none';
-
-  const user = auth.currentUser;
-  if (!user) {
-    window.location.replace('login.html?next=dashboard.html');
-    return;
-  }
-
-  try {
-    const snap = await db.collection('users').doc(user.uid).get();
-    const role = snap.exists ? (snap.data().role || 'basic') : 'basic';
-
-    if (role === 'pro') {
-      if (pro)   pro.style.display   = 'block';
-    } else {
-      if (basic) basic.style.display = 'block';
-    }
-  } catch (err) {
-    console.error('renderDashboard error:', err);
-    if (basic) basic.style.display = 'block';
-  } finally {
-    if (loader) loader.style.display = 'none';
-  }
-};
-
-/* 6) TEMP upgrade (no Stripe) — lets you view Pro now */
+/* 6) TEMP: Upgrade to Pro (no Stripe) */
 window.upgradePro = async function upgradePro() {
   try {
     const user = auth.currentUser;
@@ -178,6 +171,7 @@ window.upgradePro = async function upgradePro() {
     alert(err.message || 'Upgrade failed.');
   }
 };
+
 
 
 
