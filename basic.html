@@ -61,6 +61,25 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
   <script src="firebase.js"></script>
 </head>
+  <script>
+(function () {
+  const nearFull = (n) => n.offsetWidth >= innerWidth * 0.9 && n.offsetHeight >= innerHeight * 0.9;
+  document.querySelectorAll('body *').forEach(n => {
+    const s = getComputedStyle(n);
+    const bg = s.backgroundColor || '';
+    const isFixed = s.position === 'fixed';
+    const isTrans = (s.opacity && parseFloat(s.opacity) < 1) ||
+                    (/rgba\(/.test(bg) && /, *0\.\d+\)/.test(bg));
+    if (isFixed && isTrans && nearFull(n)) {
+      n.style.background = 'transparent';
+      n.style.opacity = '1';
+      n.style.filter = 'none';
+      n.style.pointerEvents = 'none';
+    }
+  });
+})();
+</script>
+
 
 <body class="plan-basic">
   <header class="hero">
