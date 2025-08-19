@@ -14,6 +14,21 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
 
 </head>
+  <script>
+(function(){
+  const css = `
+    body::after { background:none !important; opacity:0 !important; }
+    body::before { opacity:0 !important; filter:none !important; background:none !important; }
+    .what-we-do,.pricing,.founder { background:transparent !important; }
+    .card,.panel { background:#121216 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+    .mix-blend-overlay,.tint,.overlay,.scrim,.veil { mix-blend-mode:normal !important; background:transparent !important; display:none !important; pointer-events:none !important; }
+  `;
+  const s = document.createElement('style');
+  s.textContent = css;
+  document.head.appendChild(s);
+})();
+</script>
+
 <body>
   <header class="hero">
     <img class="logo" src="images/logo.jpg" alt="BrokeBull" />
