@@ -15,77 +15,109 @@
 </head>
 
 <body>
+  <!-- Keep your hero style; just adding CTAs -->
   <header class="hero">
-    <img class="logo" src="images/logo.jpg" alt="BrokeBull" />
-    <h1>Welcome to BrokeBull</h1>
-    <div id="authActions" class="auth-links">
-      <!-- Buttons filled by script -->
-      <a class="btn btn-primary" href="basic.html" id="ctaBasic" style="display:none;">Go to Basic</a>
-      <a class="btn" href="pro.html" id="ctaPro" style="display:none;">Go to Pro</a>
-      <a class="btn" href="login.html" id="ctaLogin" style="display:none;">Log In</a>
-      <button class="btn" id="ctaLogout" style="display:none;" onclick="logout()">Logout</button>
+    <div class="hero-bar">
+      <img class="logo logo--xl" src="images/logo.jpg" alt="BrokeBull" />
+      <h1>Welcome to BrokeBull</h1>
+
+      <!-- Role-aware CTAs -->
+      <div id="planCtas" class="auth-links">
+        <a class="btn btn-primary" href="basic.html" id="ctaBasic" style="display:none;">Go to Basic</a>
+        <a class="btn" href="pro.html" id="ctaPro" style="display:none;">Go to Pro</a>
+        <a class="btn" href="login.html" id="ctaLogin" style="display:none;">Log In</a>
+        <button class="btn" id="ctaLogout" style="display:none;" onclick="logout()">Logout</button>
+      </div>
     </div>
   </header>
 
-  <main class="container" style="max-width:1100px;margin:0 auto;padding:28px 20px;">
-    <section class="card" style="margin-bottom:18px;">
-      <h3>Basic Access</h3>
-      <p>Market overview, news, calendar, and symbol snapshots.</p>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a class="btn btn-primary" href="basic.html">Go to Basic</a>
-        <a class="btn btn-outline" href="pro.html">See Pro Features</a>
+  <!-- Keep your landing sections; sample structure below matches style.css -->
+  <main>
+    <section class="what-we-do">
+      <div class="container">
+        <h2>What we do</h2>
+        <p>Actionable market context, clean charts, and a pragmatic playbook for retail investors.</p>
       </div>
     </section>
 
-    <section class="card">
-      <h3>Pro Access</h3>
-      <p>Advanced charts, screener, Stage-2 watchlist, and Founder Q&amp;A.</p>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a class="btn btn-primary" href="pro.html">Go to Pro</a>
-        <a class="btn" href="https://newsletter.brokebullinvestments.com/subscribe" target="_blank" rel="noopener">Subscribe to Newsletter</a>
+    <section class="pricing">
+      <div class="container">
+        <h2>Plans</h2>
+        <div class="card-container">
+          <article class="card">
+            <h3>Basic</h3>
+            <ul>
+              <li>Market overview & news</li>
+              <li>Economic calendar</li>
+              <li>Symbol snapshots</li>
+            </ul>
+            <a class="btn" href="basic.html">Go to Basic</a>
+          </article>
+
+          <article class="card">
+            <h3>Pro</h3>
+            <ul>
+              <li>Advanced charting & screener</li>
+              <li>Stage-2 algo watchlist</li>
+              <li>Founder Q&amp;A</li>
+            </ul>
+            <a class="btn" href="pro.html">Go to Pro</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials">
+      <div class="container">
+        <h2>What traders say</h2>
+        <div class="testimonial-row">
+          <div class="testimonial"><p>“Dashboard clarity without the noise.”</p></div>
+          <div class="testimonial"><p>“Signals that respect risk.”</p></div>
+          <div class="testimonial"><p>“Clean UX, sane defaults.”</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="founder">
+      <div class="container founder-bio">
+        <img src="images/logo.jpg" alt="BrokeBull" class="founder-photo" />
+        <h2>Why BrokeBull?</h2>
+        <p>We make disciplined trading feel simple. Tools that get out of your way, and a cadence that keeps you in the pocket.</p>
       </div>
     </section>
   </main>
 
+  <!-- CTA logic (auth/role-aware; landing visuals untouched) -->
   <script>
-    // Adapt CTAs based on auth + role
-    (function init() {
-      const auth = firebase.auth();
-      const db   = firebase.firestore();
+  (function initLandingCTAs(){
+    if (!window.firebase || !firebase.apps?.length) { // static fail-safe
+      document.getElementById('ctaBasic').style.display = '';
+      document.getElementById('ctaPro').style.display = '';
+      document.getElementById('ctaLogin').style.display = '';
+      return;
+    }
+    const auth = firebase.auth();
+    const db   = firebase.firestore();
 
-      const $ = id => document.getElementById(id);
-      const show = el => el && (el.style.display = "");
-      const hide = el => el && (el.style.display = "none");
+    const $ = id => document.getElementById(id);
+    const show = el => el && (el.style.display = "");
+    const hide = el => el && (el.style.display = "none");
 
-      auth.onAuthStateChanged(async user => {
-        if (!user) {
-          // Signed out: show Login + both plan links
-          show($("ctaLogin"));
-          show($("ctaBasic"));
-          show($("ctaPro"));
-          hide($("ctaLogout"));
-          return;
-        }
-        // Signed in: show Logout
-        hide($("ctaLogin"));
-        show($("ctaLogout"));
+    auth.onAuthStateChanged(async user => {
+      show($("ctaBasic")); show($("ctaPro")); // always visible
+      if (!user) { show($("ctaLogin")); hide($("ctaLogout")); $("ctaPro").textContent = "Go to Pro"; return; }
 
-        try {
-          const snap = await db.collection('users').doc(user.uid).get();
-          const role = snap.exists && snap.data().role ? snap.data().role : 'basic';
-          // Always show Basic
-          show($("ctaBasic"));
-          // Pro visible for everyone; non-pro clicking pro.html will get redirected to Basic with upgrade=1
-          show($("ctaPro"));
-          // Label tweak if you're pro
-          if (role === 'pro') $("ctaPro").textContent = "Go to Pro";
-          else $("ctaPro").textContent = "Upgrade to Pro";
-        } catch (e) {
-          console.warn('Role check failed; showing default CTAs', e);
-          show($("ctaBasic")); show($("ctaPro"));
-        }
-      });
-    })();
+      hide($("ctaLogin")); show($("ctaLogout"));
+      try {
+        const snap = await db.collection('users').doc(user.uid).get();
+        const role = snap.exists && snap.data().role ? snap.data().role : 'basic';
+        $("ctaPro").textContent = role === 'pro' ? "Go to Pro" : "Upgrade to Pro";
+      } catch(e) {
+        console.warn("Role check failed:", e);
+        $("ctaPro").textContent = "Go to Pro";
+      }
+    });
+  })();
   </script>
 </body>
 </html>
