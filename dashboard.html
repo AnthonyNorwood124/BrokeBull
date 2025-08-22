@@ -2,122 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>BrokeBull — Dashboard</title>
+  <title>Redirecting…</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- De-tint for dashboard (local to this page) -->
-  <style id="detint-dashboard">
-    /* Remove global overlays on the dashboard page */
-    body::before,
-    body::after {
-      display: none !important;
-      content: '' !important;
-      background: none !important;
-      opacity: 0 !important;
-      filter: none !important;
-    }
-
-    /* Opaque hero to avoid any bleed-through */
-    .hero {
-      background: linear-gradient(140deg, #6c2eb8 0%, #2c0054 50%, #0f0f12 100%) !important;
-    }
-
-    /* Solid panels/cards (no frosted glass) */
-    .card, .panel {
-      background: #121216 !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-    }
-
-    /* Neutralize any preview/scrim/overlay dimmer */
-    [class*="overlay"], [class*="scrim"], [class*="veil"],
-    [id*="overlay"],   [id*="scrim"],   [id*="veil"], [id*="preview"] {
-      mix-blend-mode: normal !important;
-      background: transparent !important;
-      filter: none !important;
-      opacity: 1 !important;
-      pointer-events: none !important;
-    }
-    [class*="overlay"]::before, [class*="overlay"]::after,
-    [class*="scrim"]::before,   [class*="scrim"]::after,
-    [class*="veil"]::before,    [class*="veil"]::after,
-    [id*="overlay"]::before,    [id*="overlay"]::after,
-    [id*="preview"]::before,    [id*="preview"]::after {
-      content: none !important;
-      background: transparent !important;
-    }
+  <!-- Hard redirect to the landing -->
+  <meta http-equiv="refresh" content="0; url=/index.html">
+  <script>location.replace('/index.html');</script>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif; background:#000; color:#fff; display:grid; place-items:center; height:100vh; }
+    a { color:#cfcfe4; }
   </style>
-
-  <!-- Firebase Compat -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
-  <script src="firebase.js"></script>
 </head>
-
 <body>
-  <header class="hero">
-    <img class="logo" src="images/logo.jpg" alt="BrokeBull" />
-    <h1>Welcome to BrokeBull</h1>
-    <div>
-      <a class="btn" href="index.html">Home</a>
-      <a class="btn" href="basic.html">Basic</a>
-      <a class="btn" href="pro.html">Pro</a>
-      <button class="btn" onclick="logout()">Logout</button>
-    </div>
-  </header>
-
-  <div id="loading" style="color:#bbb;text-align:center;margin:24px 0;">Loading…</div>
-
-  <main id="content" class="container" style="max-width:1100px;margin:0 auto;padding:20px;display:none;">
-    <!-- Keep your existing dashboard sections/widgets here.
-         Below is a neutral placeholder; replace/add as needed. -->
-
-    <section class="panel">
-      <h3>Dashboard</h3>
-      <p>This page is de-tinted. Add your widgets/sections as usual.</p>
-    </section>
-  </main>
-
-  <!-- Auth gate + late-injection sweeper -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const auth = firebase.auth();
-      auth.onAuthStateChanged((user) => {
-        const loading = document.getElementById('loading');
-        const content = document.getElementById('content');
-        if (!user) { window.location.replace('login.html'); return; }
-        if (loading) loading.style.display = 'none';
-        if (content) content.style.display = 'block';
-      });
-    });
-
-    // Sweep any late-injected fullscreen dimmer
-    window.addEventListener('load', () => {
-      const sweep = () => {
-        const nearFull = n => {
-          const r = n.getBoundingClientRect();
-          return r.width >= innerWidth * 0.9 && r.height >= innerHeight * 0.9;
-        };
-        document.querySelectorAll('body *').forEach(n => {
-          const s = getComputedStyle(n);
-          const fixed = s.position === 'fixed';
-          const bg = s.backgroundColor || '';
-          const semi = (s.opacity && parseFloat(s.opacity) < 1) ||
-                       (/rgba\(/.test(bg) && /, *0\.\d+\)/.test(bg));
-          if (fixed && nearFull(n) && semi) {
-            n.style.background = 'transparent';
-            n.style.opacity = '1';
-            n.style.filter = 'none';
-            n.style.pointerEvents = 'none';
-          }
-        });
-      };
-      sweep();
-      setTimeout(sweep, 400);
-    });
-  </script>
+  Redirecting… If you are not redirected, <a href="/index.html">click here</a>.
 </body>
 </html>
