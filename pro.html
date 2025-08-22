@@ -21,20 +21,16 @@
     [class*="overlay"]::before,[class*="overlay"]::after,[class*="scrim"]::before,[class*="scrim"]::after,[class*="veil"]::before,[class*="veil"]::after,
     [id*="overlay"]::before,[id*="overlay"]::after,[id*="preview"]::before,[id*="preview"]::after { content:none !important; background:transparent !important; }
 
-    /* Layout widen a touch on desktop */
     @media (min-width:1280px){ .container{ width:min(1280px,92vw); } }
 
-    /* Q&A + newsletter */
     .qa-form { display:flex; flex-direction:column; gap:10px; max-width:640px; }
     .qa-form input, .qa-form textarea { width:100%; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,.15); background:#0f0f12; color:#fff; }
     .qa-form button { align-self:flex-start; }
     .newsletter-card { padding:16px; border:1px solid rgba(108,46,184,.45); border-radius:14px; box-shadow:0 12px 26px rgba(0,0,0,.35); }
     .watchlist .tag { display:inline-block; padding:2px 6px; border:1px solid rgba(255,255,255,.15); border-radius:999px; font-size:.8rem; }
 
-    /* Advanced Chart: force full height */
-    #advChartWrap { height:88vh; min-height:900px; max-height:1400px; margin-bottom:16px; }
-    #advChartWrap > .tradingview-widget-container__widget { height:100% !important; }
-    #advChartWrap iframe { height:100% !important; }
+    /* Advanced Chart container; actual height is set in JS to a fixed px value */
+    #advChartWrap { margin-bottom:16px; }
   </style>
 
   <!-- Firebase Compat -->
@@ -60,29 +56,10 @@
 
   <main id="content" class="container" style="max-width:1280px;margin:0 auto;padding:20px;display:none;">
 
-    <!-- Live ticker (same as Basic) -->
+    <!-- Live ticker tape (programmatic mount) -->
     <section>
-      <div class="tradingview-widget-container" style="margin: -6px 0 14px 0;">
+      <div id="tickerMount" class="tradingview-widget-container" style="margin:-6px 0 14px 0;">
         <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-        {
-          "symbols": [
-            {"proName":"AMEX:SPY","title":"SPY"},
-            {"proName":"NASDAQ:QQQ","title":"QQQ"},
-            {"proName":"AMEX:IWM","title":"IWM"},
-            {"proName":"AMEX:DIA","title":"DIA"},
-            {"proName":"NASDAQ:AAPL","title":"AAPL"},
-            {"proName":"NASDAQ:MSFT","title":"MSFT"},
-            {"proName":"NASDAQ:NVDA","title":"NVDA"},
-            {"proName":"NASDAQ:TSLA","title":"TSLA"}
-          ],
-          "showSymbolLogo": true,
-          "isTransparent": false,
-          "displayMode": "adaptive",
-          "colorTheme": "dark",
-          "locale": "en"
-        }
-        </script>
       </div>
     </section>
 
@@ -104,7 +81,7 @@
       </div>
     </section>
 
-    <!-- Advanced Chart (really big) -->
+    <!-- Advanced Chart (rendered after auth with explicit pixel height) -->
     <section>
       <h2>Advanced Chart</h2>
       <div id="advChartWrap" class="tradingview-widget-container">
@@ -189,7 +166,8 @@
           if (loading) loading.style.display = 'none';
           if (content) content.style.display = 'block';
 
-          // Load watchlist + chart now that content is visible
+          // After content is visible, mount widgets
+          mountTicker();
           loadStage2();
           initAdvancedChart();
         } catch (err) {
@@ -198,25 +176,55 @@
       });
     });
 
-    // Inject TradingView Advanced Chart AFTER content is visible (fixes tiny charts)
+    // --- Live ticker (programmatic) ---
+    function mountTicker(){
+      const mount = document.getElementById('tickerMount');
+      if (!mount || document.getElementById('tv-ticker-script')) return;
+      const s = document.createElement('script');
+      s.id = 'tv-ticker-script';
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+      s.text = JSON.stringify({
+        symbols: [
+          {proName:"AMEX:SPY", title:"SPY"},
+          {proName:"NASDAQ:QQQ", title:"QQQ"},
+          {proName:"AMEX:IWM", title:"IWM"},
+          {proName:"AMEX:DIA", title:"DIA"},
+          {proName:"NASDAQ:AAPL", title:"AAPL"},
+          {proName:"NASDAQ:MSFT", title:"MSFT"},
+          {proName:"NASDAQ:NVDA", title:"NVDA"},
+          {proName:"NASDAQ:TSLA", title:"TSLA"}
+        ],
+        showSymbolLogo: true,
+        isTransparent: false,
+        displayMode: "adaptive",
+        colorTheme: "dark",
+        locale: "en"
+      });
+      mount.appendChild(s);
+    }
+
+    // --- Advanced Chart (fixed pixel height for reliability) ---
     function initAdvancedChart(){
       const wrap = document.getElementById('advChartWrap');
       if (!wrap || document.getElementById('tv-adv-script')) return;
 
-      // Keep height responsive and generous
-      const setH = () => {
-        const h = Math.max(900, Math.min(1400, Math.round(window.innerHeight * 0.88)));
-        wrap.style.height = h + 'px';
-      };
-      setH(); window.addEventListener('resize', setH);
+      // Compute a generous fixed pixel height and apply to wrapper
+      const computeH = () => Math.max(900, Math.min(1400, Math.round(window.innerHeight * 0.9)));
+      const applyH = () => wrap.style.height = computeH() + 'px';
+      applyH(); window.addEventListener('resize', applyH);
 
+      // Programmatic mount with explicit width/height (no autosize)
       const s = document.createElement('script');
       s.id = 'tv-adv-script';
       s.type = 'text/javascript';
       s.async = true;
       s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
       s.text = JSON.stringify({
-        autosize: true,
+        width: "100%",
+        height: computeH(),          // explicit px height solves tiny-iframe issues
+        autosize: false,
         symbol: "NASDAQ:QQQ",
         interval: "D",
         timezone: "Etc/UTC",
@@ -232,7 +240,7 @@
       wrap.appendChild(s);
     }
 
-    // Stage-2 loader (fetch JSON, render table; graceful fallback)
+    // --- Stage-2 loader (fetch JSON, render table; graceful fallback) ---
     async function loadStage2(){
       const tbody = document.getElementById('stage2Body');
       const fmt = (n) => (n === null || n === undefined || n === '') ? '—' : n;
