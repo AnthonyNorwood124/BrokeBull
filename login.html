@@ -2,53 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Login to BrokeBull</title>
+  <title>Redirecting to Sign In…</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Cache-Control" content="no-store" />
-
-  <!-- Minimal isolated styles (no global CSS loaded) -->
+  <!-- Hard redirect to the on-page auth section on the landing -->
+  <meta http-equiv="refresh" content="0; url=/index.html#auth">
+  <script>location.replace('/index.html#auth');</script>
   <style>
-    :root { color-scheme: dark; }
-    *, *::before, *::after { transition: none !important; animation: none !important; }
-    body { margin:0; background:#000; color:#fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    .auth-wrap { max-width: 720px; margin: 10vh auto; padding: 24px; }
-    h1 { margin: 0 0 12px; font-weight: 700; }
-    .auth-row { display:flex; gap:10px; flex-wrap: wrap; align-items: center; }
-    input { padding:10px 12px; border-radius:8px; border:1px solid #333; background:#0c0c0c; color:#fff; min-width:260px; }
-    button { padding:10px 14px; border-radius:8px; border:1px solid #6A0DAD; background:#6A0DAD; color:#fff; cursor:pointer; }
-    button.secondary { background:#111; border-color:#6A0DAD; }
-    button:hover { filter: brightness(1.05); }
-    .links { margin-top: 10px; font-size: 0.95rem; }
-    .links a { color:#c9a7ff; text-decoration:none; }
-    #status { margin-top: 10px; font-size: .95rem; color: #ffdf6e; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif; background:#000; color:#fff; display:grid; place-items:center; height:100vh; }
+    a { color:#cfcfe4; }
   </style>
-
-  <!-- Firebase compat SDKs (match firebase.js) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <!-- Your firebase logic (auth handlers, redirects) -->
-  <script src="firebase.js"></script>
 </head>
 <body>
-  <div class="auth-wrap">
-    <h1>Login to BrokeBull</h1>
-
-    <div class="auth-row">
-      <input id="email" type="email" placeholder="email@domain.com" autocomplete="username" />
-      <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
-      <button id="signInBtn" type="button">Sign In</button>
-      <button id="createBtn" type="button" class="secondary">Create Account</button>
-    </div>
-
-    <div class="links">
-      <a href="#" id="resetLink">Forgot password?</a>
-      &nbsp;·&nbsp;<a href="index.html">Back to Home</a>
-      &nbsp;·&nbsp;<a href="dashboard.html">Go to Dashboard</a>
-    </div>
-
-    <div id="status"></div>
-  </div>
+  Redirecting… If you are not redirected, <a href="/index.html#auth">click here</a>.
 </body>
 </html>
+
