@@ -8,42 +8,17 @@
 
   <!-- De-tint hammer -->
   <style id="detint">
-    body.plan-basic::before,
-    body.plan-basic::after,
-    body.plan-pro::before,
-    body.plan-pro::after {
-      display: none !important;
-      content: '' !important;
-      background: none !important;
-      opacity: 0 !important;
-      filter: none !important;
+    body.plan-basic::before, body.plan-basic::after,
+    body.plan-pro::before,  body.plan-pro::after {
+      display:none !important; content:'' !important; background:none !important; opacity:0 !important; filter:none !important;
     }
-
-    body.plan-pro .hero {
-      background: linear-gradient(140deg, #6c2eb8 0%, #2c0054 50%, #0f0f12 100%) !important;
+    body.plan-pro .hero { background: linear-gradient(140deg, #6c2eb8 0%, #2c0054 50%, #0f0f12 100%) !important; }
+    .card, .panel { background:#121216 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+    [class*="overlay"], [class*="scrim"], [class*="veil"], [id*="overlay"], [id*="scrim"], [id*="veil"], [id*="preview"]{
+      mix-blend-mode:normal !important; background:transparent !important; filter:none !important; opacity:1 !important; pointer-events:none !important;
     }
-
-    .card, .panel {
-      background: #121216 !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-    }
-
-    [class*="overlay"], [class*="scrim"], [class*="veil"],
-    [id*="overlay"],   [id*="scrim"],   [id*="veil"], [id*="preview"] {
-      mix-blend-mode: normal !important;
-      background: transparent !important;
-      filter: none !important;
-      opacity: 1 !important;
-      pointer-events: none !important;
-    }
-    [class*="overlay"]::before, [class*="overlay"]::after,
-    [class*="scrim"]::before,   [class*="scrim"]::after,
-    [class*="veil"]::before,    [class*="veil"]::after,
-    [id*="overlay"]::before,    [id*="overlay"]::after,
-    [id*="preview"]::before,    [id*="preview"]::after {
-      content: none !important;
-      background: transparent !important;
+    [class*="overlay"]::before,[class*="overlay"]::after,[class*="scrim"]::before,[class*="scrim"]::after,[class*="veil"]::before,[class*="veil"]::after,[id*="overlay"]::before,[id*="overlay"]::after,[id*="preview"]::before,[id*="preview"]::after{
+      content:none !important; background:transparent !important;
     }
   </style>
 
@@ -61,7 +36,6 @@
     <h1>BrokeBull — Pro</h1>
     <div>
       <a class="btn" href="index.html">Home</a>
-      <a class="btn" href="dashboard.html">Dashboard</a>
       <a class="btn" href="basic.html">Basic</a>
       <button class="btn" onclick="logout()">Logout</button>
     </div>
@@ -77,24 +51,8 @@
       <div class="tradingview-widget-container" style="height:520px;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-        {
-          "colorTheme": "dark",
-          "dateRange": "12M",
-          "showChart": true,
-          "locale": "en",
-          "width": "100%",
-          "height": "500",
-          "isTransparent": false,
-          "tabs": [
-            {
-              "title": "US Stocks",
-              "symbols": [
-                {"s":"NASDAQ:AAPL"}, {"s":"NASDAQ:NVDA"}, {"s":"NASDAQ:TSLA"},
-                {"s":"NASDAQ:MSFT"}, {"s":"NYSE:PLTR"}, {"s":"NYSE:SHOP"}
-              ]
-            }
-          ]
-        }
+        {"colorTheme":"dark","dateRange":"12M","showChart":true,"locale":"en","width":"100%","height":"500","isTransparent":false,
+         "tabs":[{"title":"US Stocks","symbols":[{"s":"NASDAQ:AAPL"},{"s":"NASDAQ:NVDA"},{"s":"NASDAQ:TSLA"},{"s":"NASDAQ:MSFT"},{"s":"NYSE:PLTR"},{"s":"NYSE:SHOP"}]}]}
         </script>
       </div>
     </section>
@@ -105,15 +63,7 @@
       <div class="tradingview-widget-container" style="height:520px;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
-        {
-          "feedMode": "all_symbols",
-          "isTransparent": false,
-          "displayMode": "regular",
-          "width": "100%",
-          "height": "500",
-          "colorTheme": "dark",
-          "locale": "en"
-        }
+        {"feedMode":"all_symbols","isTransparent":false,"displayMode":"regular","width":"100%","height":"500","colorTheme":"dark","locale":"en"}
         </script>
       </div>
     </section>
@@ -124,63 +74,34 @@
       <div class="tradingview-widget-container" style="height:520px;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-        {
-          "width": "100%",
-          "height": "500",
-          "locale": "en",
-          "importanceFilter": "-1,0,1",
-          "colorTheme": "dark",
-          "isTransparent": false
-        }
+        {"width":"100%","height":"500","locale":"en","importanceFilter":"-1,0,1","colorTheme":"dark","isTransparent":false}
         </script>
       </div>
     </section>
 
-    <!-- Pro: Advanced Real-Time Chart -->
+    <!-- Advanced Chart -->
     <section>
       <h2>Advanced Chart</h2>
       <div class="tradingview-widget-container" style="margin-bottom:16px;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-        {
-          "autosize": true,
-          "symbol": "NASDAQ:QQQ",
-          "interval": "D",
-          "timezone": "Etc/UTC",
-          "theme": "dark",
-          "style": "1",
-          "locale": "en",
-          "allow_symbol_change": true,
-          "withdateranges": true,
-          "hide_top_toolbar": false,
-          "save_image": false,
-          "studies": ["MASimple@tv-basicstudies","RSI@tv-basicstudies","MACD@tv-basicstudies"]
-        }
+        {"autosize":true,"symbol":"NASDAQ:QQQ","interval":"D","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","allow_symbol_change":true,"withdateranges":true,"hide_top_toolbar":false,"save_image":false,"studies":["MASimple@tv-basicstudies","RSI@tv-basicstudies","MACD@tv-basicstudies"]}
         </script>
       </div>
     </section>
 
-    <!-- Pro: Stock Screener -->
+    <!-- Stock Screener -->
     <section>
       <h2>Stock Screener</h2>
       <div class="tradingview-widget-container" style="margin-bottom:16px;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
-        {
-          "width": "100%",
-          "height": 600,
-          "defaultColumn": "overview",
-          "screener_type": "stock",
-          "displayCurrency": "USD",
-          "colorTheme": "dark",
-          "locale": "en",
-          "isTransparent": false
-        }
+        {"width":"100%","height":600,"defaultColumn":"overview","screener_type":"stock","displayCurrency":"USD","colorTheme":"dark","locale":"en","isTransparent":false}
         </script>
       </div>
     </section>
 
-    <!-- Pro: Founder Q&A -->
+    <!-- Founder Q&A -->
     <section>
       <h2>Founder Q&A</h2>
       <p>Submit questions for Tony’s weekly Q&A.</p>
@@ -191,7 +112,7 @@
       </form>
     </section>
 
-    <!-- Pro: Stage 2 Algo Watchlist -->
+    <!-- Stage-2 Watchlist -->
     <section>
       <h2>Stage-2 Algo Watchlist</h2>
       <ul class="watchlist">
@@ -200,7 +121,6 @@
         <li><strong>NVDA</strong> — Flag forming; relative strength intact</li>
         <li><strong>PLTR</strong> — Retest of prior breakout area; risk-managed entries only</li>
       </ul>
-      <p class="tiny">We can make this auto-populate from JSON in the repo. Low lift.</p>
     </section>
   </main>
 
@@ -209,7 +129,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       const auth = firebase.auth();
       const db   = firebase.firestore();
-
       const loading = document.getElementById('loading');
       const content = document.getElementById('content');
 
@@ -222,8 +141,7 @@
           if (loading) loading.style.display = 'none';
           if (content) content.style.display = 'block';
         } catch (err) {
-          console.error(err);
-          window.location.replace('basic.html');
+          console.error(err); window.location.replace('basic.html');
         }
       });
     });
@@ -231,26 +149,15 @@
     // Sweep any late-injected fullscreen dimmer
     window.addEventListener('load', () => {
       const sweep = () => {
-        const nearFull = n => {
-          const r = n.getBoundingClientRect();
-          return r.width >= innerWidth * 0.9 && r.height >= innerHeight * 0.9;
-        };
+        const nearFull = n => { const r = n.getBoundingClientRect(); return r.width >= innerWidth*0.9 && r.height >= innerHeight*0.9; };
         document.querySelectorAll('body *').forEach(n => {
-          const s = getComputedStyle(n);
+          const s = getComputedStyle(n), bg = s.backgroundColor || '';
           const fixed = s.position === 'fixed';
-          const bg = s.backgroundColor || '';
-          const semi = (s.opacity && parseFloat(s.opacity) < 1) ||
-                       (/rgba\(/.test(bg) && /, *0\.\d+\)/.test(bg));
-          if (fixed && nearFull(n) && semi) {
-            n.style.background = 'transparent';
-            n.style.opacity = '1';
-            n.style.filter = 'none';
-            n.style.pointerEvents = 'none';
-          }
+          const semi  = (s.opacity && parseFloat(s.opacity) < 1) || (/rgba\(/.test(bg) && /, *0\.\d+\)/.test(bg));
+          if (fixed && nearFull(n) && semi) { n.style.background='transparent'; n.style.opacity='1'; n.style.filter='none'; n.style.pointerEvents='none'; }
         });
       };
-      sweep();
-      setTimeout(sweep, 400);
+      sweep(); setTimeout(sweep, 400);
     });
   </script>
 </body>
