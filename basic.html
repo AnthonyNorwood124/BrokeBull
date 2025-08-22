@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 
-  <!-- De-tint hammer (wins cascade over style.css) -->
+  <!-- De-tint hammer (wins over style.css) -->
   <style id="detint">
-    /* Kill sitewide pseudo overlays on plan pages */
+    /* Kill site-wide pseudo overlays on plan pages */
     body.plan-basic::before,
     body.plan-basic::after,
     body.plan-pro::before,
@@ -32,7 +32,7 @@
       -webkit-backdrop-filter: none !important;
     }
 
-    /* Neutralize any full-screen dimmer/scrim/preview overlay */
+    /* Neutralize any fixed full-screen dimmer/scrim/preview overlay */
     [class*="overlay"], [class*="scrim"], [class*="veil"],
     [id*="overlay"],   [id*="scrim"],   [id*="veil"], [id*="preview"] {
       mix-blend-mode: normal !important;
@@ -74,6 +74,7 @@
   <div id="loading" style="color:#bbb;text-align:center;margin:24px 0;">Loading…</div>
 
   <main id="content" class="container" style="max-width:1100px;margin:0 auto;padding:20px;display:none;">
+
     <!-- Ticker Tape -->
     <section>
       <div class="tradingview-widget-container" style="margin-bottom:16px;">
@@ -100,7 +101,7 @@
       </div>
     </section>
 
-    <!-- Trending Stocks (Market Overview) -->
+    <!-- Trending Stocks -->
     <section>
       <h2>Trending Stocks</h2>
       <div class="tradingview-widget-container" style="height:520px;">
@@ -209,9 +210,8 @@
     </section>
   </main>
 
-  <!-- Run after the DOM and any injected overlays are in place -->
+  <!-- Auth gate + rogue overlay sweeper -->
   <script>
-    // Auth gate; show content once session is restored.
     document.addEventListener('DOMContentLoaded', () => {
       const auth = firebase.auth();
       auth.onAuthStateChanged((user) => {
@@ -223,10 +223,10 @@
       });
     });
 
-    // Rogue overlay sweeper (runs after load + once more for late injectors)
+    // Sweep any late-injected fullscreen dimmer
     window.addEventListener('load', () => {
       const sweep = () => {
-        const nearFull = (n) => {
+        const nearFull = n => {
           const r = n.getBoundingClientRect();
           return r.width >= innerWidth * 0.9 && r.height >= innerHeight * 0.9;
         };
