@@ -6,20 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 
-  <!-- De-tint hammer -->
+  <!-- De-tint hammer (Pro only) -->
   <style id="detint">
-    body.plan-basic::before, body.plan-basic::after,
-    body.plan-pro::before,  body.plan-pro::after {
-      display:none !important; content:'' !important; background:none !important; opacity:0 !important; filter:none !important;
-    }
+    body.plan-pro::before, body.plan-pro::after { display:none !important; content:'' !important; background:none !important; opacity:0 !important; filter:none !important; }
     body.plan-pro .hero { background: linear-gradient(140deg, #6c2eb8 0%, #2c0054 50%, #0f0f12 100%) !important; }
     .card, .panel { background:#121216 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
     [class*="overlay"], [class*="scrim"], [class*="veil"], [id*="overlay"], [id*="scrim"], [id*="veil"], [id*="preview"]{
       mix-blend-mode:normal !important; background:transparent !important; filter:none !important; opacity:1 !important; pointer-events:none !important;
     }
-    [class*="overlay"]::before,[class*="overlay"]::after,[class*="scrim"]::before,[class*="scrim"]::after,[class*="veil"]::before,[class*="veil"]::after,[id*="overlay"]::before,[id*="overlay"]::after,[id*="preview"]::before,[id*="preview"]::after{
-      content:none !important; background:transparent !important;
-    }
+    [class*="overlay"]::before,[class*="overlay"]::after,[class*="scrim"]::before,[class*="scrim"]::after,[class*="veil"]::before,[class*="veil"]::after,[id*="overlay"]::before,[id*="overlay"]::after,[id*="preview"]::before,[id*="preview"]::after{ content:none !important; background:transparent !important; }
+    /* Optional: tighter table look for watchlist */
+    .watchlist td small { opacity:.8; }
+    .watchlist .tag { display:inline-block; padding:2px 6px; border:1px solid rgba(255,255,255,.15); border-radius:999px; font-size:.8rem; }
   </style>
 
   <!-- Firebase Compat -->
@@ -43,7 +41,7 @@
 
   <div id="loading" style="color:#bbb;text-align:center;margin:24px 0;">Loading…</div>
 
-  <main id="content" class="container" style="max-width:1100px;margin:0 auto;padding:20px;display:none;">
+  <main id="content" class="container" style="max-width:1200px;margin:0 auto;padding:20px;display:none;">
 
     <!-- Market Overview -->
     <section>
@@ -51,8 +49,23 @@
       <div class="tradingview-widget-container" style="height:520px;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
-        {"colorTheme":"dark","dateRange":"12M","showChart":true,"locale":"en","width":"100%","height":"500","isTransparent":false,
-         "tabs":[{"title":"US Stocks","symbols":[{"s":"NASDAQ:AAPL"},{"s":"NASDAQ:NVDA"},{"s":"NASDAQ:TSLA"},{"s":"NASDAQ:MSFT"},{"s":"NYSE:PLTR"},{"s":"NYSE:SHOP"}]}]}
+        {
+          "colorTheme": "dark",
+          "dateRange": "12M",
+          "showChart": true,
+          "locale": "en",
+          "width": "100%",
+          "height": "500",
+          "isTransparent": false,
+          "tabs": [
+            { "title": "US Stocks",
+              "symbols": [
+                {"s":"NASDAQ:AAPL"}, {"s":"NASDAQ:NVDA"}, {"s":"NASDAQ:TSLA"},
+                {"s":"NASDAQ:MSFT"}, {"s":"NYSE:PLTR"}, {"s":"NYSE:SHOP"}
+              ]
+            }
+          ]
+        }
         </script>
       </div>
     </section>
@@ -63,7 +76,7 @@
       <div class="tradingview-widget-container" style="height:520px;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
-        {"feedMode":"all_symbols","isTransparent":false,"displayMode":"regular","width":"100%","height":"500","colorTheme":"dark","locale":"en"}
+        { "feedMode":"all_symbols", "isTransparent":false, "displayMode":"regular", "width":"100%", "height":"500", "colorTheme":"dark", "locale":"en" }
         </script>
       </div>
     </section>
@@ -74,58 +87,64 @@
       <div class="tradingview-widget-container" style="height:520px;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-        {"width":"100%","height":"500","locale":"en","importanceFilter":"-1,0,1","colorTheme":"dark","isTransparent":false}
+        { "width":"100%", "height":"500", "locale":"en", "importanceFilter":"-1,0,1", "colorTheme":"dark", "isTransparent":false }
         </script>
       </div>
     </section>
 
-    <!-- Advanced Chart -->
+    <!-- Advanced Chart (BIGGER) -->
     <section>
       <h2>Advanced Chart</h2>
-      <div class="tradingview-widget-container" style="margin-bottom:16px;">
-        <div class="tradingview-widget-container__widget"></div>
+      <!-- Set a taller container; autosize uses parent height -->
+      <div class="tradingview-widget-container" style="height:820px;margin-bottom:16px;">
+        <div class="tradingview-widget-container__widget" style="height:100%;"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-        {"autosize":true,"symbol":"NASDAQ:QQQ","interval":"D","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","allow_symbol_change":true,"withdateranges":true,"hide_top_toolbar":false,"save_image":false,"studies":["MASimple@tv-basicstudies","RSI@tv-basicstudies","MACD@tv-basicstudies"]}
+        {
+          "autosize": true,
+          "symbol": "NASDAQ:QQQ",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "dark",
+          "style": "1",
+          "locale": "en",
+          "allow_symbol_change": true,
+          "withdateranges": true,
+          "hide_top_toolbar": false,
+          "save_image": false,
+          "studies": ["MASimple@tv-basicstudies","RSI@tv-basicstudies","MACD@tv-basicstudies"]
+        }
         </script>
       </div>
     </section>
 
-    <!-- Stock Screener -->
-    <section>
-      <h2>Stock Screener</h2>
-      <div class="tradingview-widget-container" style="margin-bottom:16px;">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
-        {"width":"100%","height":600,"defaultColumn":"overview","screener_type":"stock","displayCurrency":"USD","colorTheme":"dark","locale":"en","isTransparent":false}
-        </script>
-      </div>
-    </section>
-
-    <!-- Founder Q&A -->
-    <section>
-      <h2>Founder Q&A</h2>
-      <p>Submit questions for Tony’s weekly Q&A.</p>
-      <form action="https://formspree.io/f/xnnveoor" method="POST" class="qa-form">
-        <input type="email" name="email" placeholder="Your email" required />
-        <textarea name="question" placeholder="Ask your question…" rows="4" required></textarea>
-        <button type="submit" class="btn">Submit Question</button>
-      </form>
-    </section>
-
-    <!-- Stage-2 Watchlist -->
+    <!-- Stage-2 Algo Watchlist (JSON-driven) -->
     <section>
       <h2>Stage-2 Algo Watchlist</h2>
-      <ul class="watchlist">
-        <li><strong>TSLA</strong> — Breakout watch above recent base; volume expansion signal</li>
-        <li><strong>SMCI</strong> — Pullback to 21EMA; look for reversal confirmation</li>
-        <li><strong>NVDA</strong> — Flag forming; relative strength intact</li>
-        <li><strong>PLTR</strong> — Retest of prior breakout area; risk-managed entries only</li>
-      </ul>
+      <div class="panel">
+        <table class="watchlist" id="stage2Table">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Setup</th>
+              <th>Entry</th>
+              <th>Stop</th>
+              <th>Target</th>
+              <th>Status</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody id="stage2Body">
+            <tr><td colspan="7" style="opacity:.8;">Loading watchlist…</td></tr>
+          </tbody>
+        </table>
+        <p class="note">Data auto-loads from <code>/data/stage2_watchlist.json</code>. If unavailable, a fallback view appears.</p>
+      </div>
     </section>
+
   </main>
 
   <script>
-    // Auth + role check
+    // Require auth + role === 'pro'
     document.addEventListener('DOMContentLoaded', () => {
       const auth = firebase.auth();
       const db   = firebase.firestore();
@@ -140,13 +159,54 @@
           if (role !== 'pro') { window.location.replace('basic.html?upgrade=1'); return; }
           if (loading) loading.style.display = 'none';
           if (content) content.style.display = 'block';
+          loadStage2(); // kick off watchlist load after auth passes
         } catch (err) {
           console.error(err); window.location.replace('basic.html');
         }
       });
     });
 
-    // Sweep any late-injected fullscreen dimmer
+    // Stage-2 loader (fetch JSON, render table; graceful fallback)
+    async function loadStage2(){
+      const tbody = document.getElementById('stage2Body');
+      const fmt = (n) => (n === null || n === undefined || n === '') ? '—' : n;
+      const link = (sym) => `https://www.tradingview.com/chart/?symbol=${encodeURIComponent(sym)}`;
+
+      const render = (rows=[]) => {
+        if (!rows.length) {
+          tbody.innerHTML = `<tr><td colspan="7" style="opacity:.8;">No symbols currently in Stage-2. Check back soon.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = rows.map(r => `
+          <tr>
+            <td><a href="${link(r.symbol)}" target="_blank" rel="noopener"><strong>${r.symbol}</strong></a></td>
+            <td>${fmt(r.setup || r.thesis)}</td>
+            <td>${fmt(r.entry)}</td>
+            <td>${fmt(r.stop)}</td>
+            <td>${fmt(r.target)}</td>
+            <td>${r.status ? `<span class="tag">${r.status}</span>` : '—'}</td>
+            <td><small>${fmt(r.updated)}</small></td>
+          </tr>
+        `).join('');
+      };
+
+      try {
+        const res = await fetch('data/stage2_watchlist.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const json = await res.json();
+        const rows = Array.isArray(json) ? json : (Array.isArray(json.items) ? json.items : []);
+        render(rows);
+      } catch (e) {
+        console.warn('Stage-2 JSON not found or invalid; showing fallback.', e);
+        render([
+          { symbol:'TSLA', setup:'Breakout over base', entry:'> 260', stop:'245', target:'290–300', status:'Watch', updated: new Date().toISOString().slice(0,10) },
+          { symbol:'NVDA', setup:'Flag continuation', entry:'> 140', stop:'132', target:'155–160', status:'Watch', updated: new Date().toISOString().slice(0,10) },
+          { symbol:'PLTR', setup:'Retest prior breakout', entry:'> 28.50', stop:'26.90', target:'32–34', status:'Watch', updated: new Date().toISOString().slice(0,10) }
+        ]);
+      }
+    }
+
+    // Late-injected overlay sweeper (belt & suspenders)
     window.addEventListener('load', () => {
       const sweep = () => {
         const nearFull = n => { const r = n.getBoundingClientRect(); return r.width >= innerWidth*0.9 && r.height >= innerHeight*0.9; };
