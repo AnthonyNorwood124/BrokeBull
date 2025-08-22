@@ -5,54 +5,51 @@
   <title>BrokeBull — Pro</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
+
+  <!-- De-tint hammer (wins over style.css) -->
   <style id="detint">
-  /* Nuke page-wide pseudo overlays on plan pages */
-  body.plan-basic::before,
-  body.plan-basic::after,
-  body.plan-pro::before,
-  body.plan-pro::after {
-    content: none !important;
-    background: none !important;
-    opacity: 0 !important;
-  }
+    /* Nuke page-wide pseudo overlays on plan pages */
+    body.plan-basic::before,
+    body.plan-basic::after,
+    body.plan-pro::before,
+    body.plan-pro::after {
+      display: none !important;
+      content: '' !important;
+      background: none !important;
+      opacity: 0 !important;
+      filter: none !important;
+    }
 
-  /* Belt + suspenders: any fixed full-screen dimmer by common names */
-  [class*="overlay"],
-  [class*="scrim"],
-  [class*="veil"],
-  [id*="overlay"],
-  [id*="scrim"],
-  [id*="veil"],
-  [id*="preview"] {
-    mix-blend-mode: normal !important;
-    background: transparent !important;
-    filter: none !important;
-    opacity: 1 !important;
-    pointer-events: none !important;
-  }
-  /* Kill their pseudo-elements too */
-  [class*="overlay"]::before,
-  [class*="overlay"]::after,
-  [class*="scrim"]::before,
-  [class*="scrim"]::after,
-  [class*="veil"]::before,
-  [class*="veil"]::after,
-  [id*="overlay"]::before,
-  [id*="overlay"]::after,
-  [id*="preview"]::before,
-  [id*="preview"]::after {
-    content: none !important;
-    background: transparent !important;
-  }
+    /* Make the hero fully opaque on Pro */
+    body.plan-pro .hero {
+      background: linear-gradient(140deg, #6c2eb8 0%, #2c0054 50%, #0f0f12 100%) !important;
+    }
 
-  /* Make glass cards solid so the background can’t show through */
-  .card, .panel {
-    background: #121216 !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-</style>
+    /* Solidify any glass cards/panels so bg can't leak through */
+    .card, .panel {
+      background: #121216 !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
 
+    /* Neutralize any fixed full-screen dimmer/scrim/preview overlay */
+    [class*="overlay"], [class*="scrim"], [class*="veil"],
+    [id*="overlay"],   [id*="scrim"],   [id*="veil"], [id*="preview"] {
+      mix-blend-mode: normal !important;
+      background: transparent !important;
+      filter: none !important;
+      opacity: 1 !important;
+      pointer-events: none !important;
+    }
+    [class*="overlay"]::before, [class*="overlay"]::after,
+    [class*="scrim"]::before,   [class*="scrim"]::after,
+    [class*="veil"]::before,    [class*="veil"]::after,
+    [id*="overlay"]::before,    [id*="overlay"]::after,
+    [id*="preview"]::before,    [id*="preview"]::after {
+      content: none !important;
+      background: transparent !important;
+    }
+  </style>
 
   <!-- Firebase Compat -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -221,17 +218,11 @@
       const content = document.getElementById('content');
 
       auth.onAuthStateChanged(async (user) => {
-        if (!user) {
-          window.location.replace('login.html');
-          return;
-        }
+        if (!user) { window.location.replace('login.html'); return; }
         try {
           const snap = await db.collection('users').doc(user.uid).get();
           const role = snap.exists && snap.data().role ? snap.data().role : 'basic';
-          if (role !== 'pro') {
-            window.location.replace('basic.html?upgrade=1');
-            return;
-          }
+          if (role !== 'pro') { window.location.replace('basic.html?upgrade=1'); return; }
           if (loading) loading.style.display = 'none';
           if (content) content.style.display = 'block';
         } catch (err) {
@@ -239,6 +230,31 @@
           window.location.replace('basic.html');
         }
       });
+    });
+
+    // Rogue overlay sweeper (after load + a 2nd pass for late injectors)
+    window.addEventListener('load', () => {
+      const sweep = () => {
+        const nearFull = (n) => {
+          const r = n.getBoundingClientRect();
+          return r.width >= innerWidth * 0.9 && r.height >= innerHeight * 0.9;
+        };
+        document.querySelectorAll('body *').forEach(n => {
+          const s = getComputedStyle(n);
+          const fixed = s.position === 'fixed';
+          const bg = s.backgroundColor || '';
+          const semi = (s.opacity && parseFloat(s.opacity) < 1) ||
+                       (/rgba\(/.test(bg) && /, *0\.\d+\)/.test(bg));
+          if (fixed && nearFull(n) && semi) {
+            n.style.background = 'transparent';
+            n.style.opacity = '1';
+            n.style.filter = 'none';
+            n.style.pointerEvents = 'none';
+          }
+        });
+      };
+      sweep();
+      setTimeout(sweep, 400);
     });
   </script>
 </body>
