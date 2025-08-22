@@ -6,9 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 
-  <!-- De-tint hammer (wins over style.css) -->
+  <!-- De-tint hammer -->
   <style id="detint">
-    /* Nuke page-wide pseudo overlays on plan pages */
     body.plan-basic::before,
     body.plan-basic::after,
     body.plan-pro::before,
@@ -20,19 +19,16 @@
       filter: none !important;
     }
 
-    /* Make the hero fully opaque on Pro */
     body.plan-pro .hero {
       background: linear-gradient(140deg, #6c2eb8 0%, #2c0054 50%, #0f0f12 100%) !important;
     }
 
-    /* Solidify any glass cards/panels so bg can't leak through */
     .card, .panel {
       background: #121216 !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
     }
 
-    /* Neutralize any fixed full-screen dimmer/scrim/preview overlay */
     [class*="overlay"], [class*="scrim"], [class*="veil"],
     [id*="overlay"],   [id*="scrim"],   [id*="veil"], [id*="preview"] {
       mix-blend-mode: normal !important;
@@ -209,7 +205,7 @@
   </main>
 
   <script>
-    // Require auth + role === 'pro'
+    // Auth + role check
     document.addEventListener('DOMContentLoaded', () => {
       const auth = firebase.auth();
       const db   = firebase.firestore();
@@ -232,10 +228,10 @@
       });
     });
 
-    // Rogue overlay sweeper (after load + a 2nd pass for late injectors)
+    // Sweep any late-injected fullscreen dimmer
     window.addEventListener('load', () => {
       const sweep = () => {
-        const nearFull = (n) => {
+        const nearFull = n => {
           const r = n.getBoundingClientRect();
           return r.width >= innerWidth * 0.9 && r.height >= innerHeight * 0.9;
         };
