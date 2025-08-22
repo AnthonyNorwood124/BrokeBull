@@ -5,81 +5,59 @@
   <title>BrokeBull — Basic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
+
+  <!-- De-tint hammer (wins cascade over style.css) -->
   <style id="detint">
-  /* Nuke page-wide pseudo overlays on plan pages */
-  body.plan-basic::before,
-  body.plan-basic::after,
-  body.plan-pro::before,
-  body.plan-pro::after {
-    content: none !important;
-    background: none !important;
-    opacity: 0 !important;
-  }
+    /* Kill sitewide pseudo overlays on plan pages */
+    body.plan-basic::before,
+    body.plan-basic::after,
+    body.plan-pro::before,
+    body.plan-pro::after {
+      display: none !important;
+      content: '' !important;
+      background: none !important;
+      opacity: 0 !important;
+      filter: none !important;
+    }
 
-  /* Belt + suspenders: any fixed full-screen dimmer by common names */
-  [class*="overlay"],
-  [class*="scrim"],
-  [class*="veil"],
-  [id*="overlay"],
-  [id*="scrim"],
-  [id*="veil"],
-  [id*="preview"] {
-    mix-blend-mode: normal !important;
-    background: transparent !important;
-    filter: none !important;
-    opacity: 1 !important;
-    pointer-events: none !important;
-  }
-  /* Kill their pseudo-elements too */
-  [class*="overlay"]::before,
-  [class*="overlay"]::after,
-  [class*="scrim"]::before,
-  [class*="scrim"]::after,
-  [class*="veil"]::before,
-  [class*="veil"]::after,
-  [id*="overlay"]::before,
-  [id*="overlay"]::after,
-  [id*="preview"]::before,
-  [id*="preview"]::after {
-    content: none !important;
-    background: transparent !important;
-  }
+    /* Make hero fully opaque so backgrounds can't ghost through */
+    body.plan-basic .hero {
+      background: linear-gradient(140deg, #6c2eb8 0%, #2c0054 50%, #0f0f12 100%) !important;
+    }
 
-  /* Make glass cards solid so the background can’t show through */
-  .card, .panel {
-    background: #121216 !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-</style>
+    /* Solidify any glass cards/panels */
+    .card, .panel {
+      background: #121216 !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
 
+    /* Neutralize any full-screen dimmer/scrim/preview overlay */
+    [class*="overlay"], [class*="scrim"], [class*="veil"],
+    [id*="overlay"],   [id*="scrim"],   [id*="veil"], [id*="preview"] {
+      mix-blend-mode: normal !important;
+      background: transparent !important;
+      filter: none !important;
+      opacity: 1 !important;
+      pointer-events: none !important;
+    }
+    [class*="overlay"]::before, [class*="overlay"]::after,
+    [class*="scrim"]::before,   [class*="scrim"]::after,
+    [class*="veil"]::before,    [class*="veil"]::after,
+    [id*="overlay"]::before,    [id*="overlay"]::after,
+    [id*="preview"]::before,    [id*="preview"]::after {
+      content: none !important;
+      background: transparent !important;
+    }
+  </style>
 
-  <!-- Firebase Compat (match other pages) -->
+  <!-- Firebase Compat -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
   <script src="firebase.js"></script>
 </head>
-  <script>
-(function () {
-  const nearFull = (n) => n.offsetWidth >= innerWidth * 0.9 && n.offsetHeight >= innerHeight * 0.9;
-  document.querySelectorAll('body *').forEach(n => {
-    const s = getComputedStyle(n);
-    const bg = s.backgroundColor || '';
-    const isFixed = s.position === 'fixed';
-    const isTrans = (s.opacity && parseFloat(s.opacity) < 1) ||
-                    (/rgba\(/.test(bg) && /, *0\.\d+\)/.test(bg));
-    if (isFixed && isTrans && nearFull(n)) {
-      n.style.background = 'transparent';
-      n.style.opacity = '1';
-      n.style.filter = 'none';
-      n.style.pointerEvents = 'none';
-    }
-  });
-})();
-</script>
-
 
 <body class="plan-basic">
   <header class="hero">
@@ -96,7 +74,6 @@
   <div id="loading" style="color:#bbb;text-align:center;margin:24px 0;">Loading…</div>
 
   <main id="content" class="container" style="max-width:1100px;margin:0 auto;padding:20px;display:none;">
-
     <!-- Ticker Tape -->
     <section>
       <div class="tradingview-widget-container" style="margin-bottom:16px;">
@@ -232,6 +209,7 @@
     </section>
   </main>
 
+  <!-- Run after the DOM and any injected overlays are in place -->
   <script>
     // Auth gate; show content once session is restored.
     document.addEventListener('DOMContentLoaded', () => {
@@ -239,13 +217,35 @@
       auth.onAuthStateChanged((user) => {
         const loading = document.getElementById('loading');
         const content = document.getElementById('content');
-        if (!user) {
-          window.location.replace('login.html');
-          return;
-        }
+        if (!user) { window.location.replace('login.html'); return; }
         if (loading) loading.style.display = 'none';
         if (content) content.style.display = 'block';
       });
+    });
+
+    // Rogue overlay sweeper (runs after load + once more for late injectors)
+    window.addEventListener('load', () => {
+      const sweep = () => {
+        const nearFull = (n) => {
+          const r = n.getBoundingClientRect();
+          return r.width >= innerWidth * 0.9 && r.height >= innerHeight * 0.9;
+        };
+        document.querySelectorAll('body *').forEach(n => {
+          const s = getComputedStyle(n);
+          const fixed = s.position === 'fixed';
+          const bg = s.backgroundColor || '';
+          const semi = (s.opacity && parseFloat(s.opacity) < 1) ||
+                       (/rgba\(/.test(bg) && /, *0\.\d+\)/.test(bg));
+          if (fixed && nearFull(n) && semi) {
+            n.style.background = 'transparent';
+            n.style.opacity = '1';
+            n.style.filter = 'none';
+            n.style.pointerEvents = 'none';
+          }
+        });
+      };
+      sweep();
+      setTimeout(sweep, 400);
     });
   </script>
 </body>
