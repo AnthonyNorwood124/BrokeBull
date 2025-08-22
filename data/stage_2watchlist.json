@@ -1,0 +1,5 @@
+[
+  { "symbol": "TSLA", "setup": "Breakout over base", "entry": "> 260", "stop": "245", "target": "290–300", "status": "Watch", "updated": "2025-08-22" },
+  { "symbol": "NVDA", "setup": "Flag continuation", "entry": "> 140", "stop": "132", "target": "155–160", "status": "Watch", "updated": "2025-08-22" },
+  { "symbol": "PLTR", "setup": "Retest prior breakout", "entry": "> 28.50", "stop": "26.90", "target": "32–34", "status": "Watch", "updated": "2025-08-22" }
+]
