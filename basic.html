@@ -6,48 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 
-  <!-- De-tint hammer (wins over style.css) -->
+  <!-- De-tint hammer -->
   <style id="detint">
-    /* Kill site-wide pseudo overlays on plan pages */
     body.plan-basic::before,
     body.plan-basic::after,
     body.plan-pro::before,
     body.plan-pro::after {
-      display: none !important;
-      content: '' !important;
-      background: none !important;
-      opacity: 0 !important;
-      filter: none !important;
+      display:none !important; content:'' !important; background:none !important; opacity:0 !important; filter:none !important;
     }
-
-    /* Make hero fully opaque so backgrounds can't ghost through */
-    body.plan-basic .hero {
-      background: linear-gradient(140deg, #6c2eb8 0%, #2c0054 50%, #0f0f12 100%) !important;
+    body.plan-basic .hero { background: linear-gradient(140deg, #6c2eb8 0%, #2c0054 50%, #0f0f12 100%) !important; }
+    .card, .panel { background:#121216 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+    [class*="overlay"], [class*="scrim"], [class*="veil"], [id*="overlay"], [id*="scrim"], [id*="veil"], [id*="preview"]{
+      mix-blend-mode:normal !important; background:transparent !important; filter:none !important; opacity:1 !important; pointer-events:none !important;
     }
-
-    /* Solidify any glass cards/panels */
-    .card, .panel {
-      background: #121216 !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-    }
-
-    /* Neutralize any fixed full-screen dimmer/scrim/preview overlay */
-    [class*="overlay"], [class*="scrim"], [class*="veil"],
-    [id*="overlay"],   [id*="scrim"],   [id*="veil"], [id*="preview"] {
-      mix-blend-mode: normal !important;
-      background: transparent !important;
-      filter: none !important;
-      opacity: 1 !important;
-      pointer-events: none !important;
-    }
-    [class*="overlay"]::before, [class*="overlay"]::after,
-    [class*="scrim"]::before,   [class*="scrim"]::after,
-    [class*="veil"]::before,    [class*="veil"]::after,
-    [id*="overlay"]::before,    [id*="overlay"]::after,
-    [id*="preview"]::before,    [id*="preview"]::after {
-      content: none !important;
-      background: transparent !important;
+    [class*="overlay"]::before,[class*="overlay"]::after,[class*="scrim"]::before,[class*="scrim"]::after,[class*="veil"]::before,[class*="veil"]::after,[id*="overlay"]::before,[id*="overlay"]::after,[id*="preview"]::before,[id*="preview"]::after{
+      content:none !important; background:transparent !important;
     }
   </style>
 
@@ -65,7 +38,6 @@
     <h1>BrokeBull — Basic</h1>
     <div>
       <a class="btn" href="index.html">Home</a>
-      <a class="btn" href="dashboard.html">Dashboard</a>
       <a class="btn" href="pro.html">Pro</a>
       <button class="btn" onclick="logout()">Logout</button>
     </div>
@@ -81,21 +53,8 @@
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
         {
-          "symbols": [
-            {"proName":"AMEX:SPY","title":"SPY"},
-            {"proName":"NASDAQ:QQQ","title":"QQQ"},
-            {"proName":"AMEX:IWM","title":"IWM"},
-            {"proName":"AMEX:DIA","title":"DIA"},
-            {"proName":"NASDAQ:AAPL","title":"AAPL"},
-            {"proName":"NASDAQ:MSFT","title":"MSFT"},
-            {"proName":"NASDAQ:NVDA","title":"NVDA"},
-            {"proName":"NASDAQ:TSLA","title":"TSLA"}
-          ],
-          "showSymbolLogo": true,
-          "isTransparent": false,
-          "displayMode": "adaptive",
-          "colorTheme": "dark",
-          "locale": "en"
+          "symbols":[{"proName":"AMEX:SPY","title":"SPY"},{"proName":"NASDAQ:QQQ","title":"QQQ"},{"proName":"AMEX:IWM","title":"IWM"},{"proName":"AMEX:DIA","title":"DIA"},{"proName":"NASDAQ:AAPL","title":"AAPL"},{"proName":"NASDAQ:MSFT","title":"MSFT"},{"proName":"NASDAQ:NVDA","title":"NVDA"},{"proName":"NASDAQ:TSLA","title":"TSLA"}],
+          "showSymbolLogo":true,"isTransparent":false,"displayMode":"adaptive","colorTheme":"dark","locale":"en"
         }
         </script>
       </div>
@@ -108,34 +67,10 @@
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
         {
-          "colorTheme": "dark",
-          "dateRange": "12M",
-          "showChart": true,
-          "locale": "en",
-          "width": "100%",
-          "height": "500",
-          "largeChartUrl": "",
-          "isTransparent": false,
-          "tabs": [
-            {
-              "title": "US Stocks",
-              "symbols": [
-                {"s": "NASDAQ:AAPL", "d": "Apple"},
-                {"s": "NASDAQ:NVDA", "d": "NVIDIA"},
-                {"s": "NASDAQ:TSLA", "d": "Tesla"},
-                {"s": "NASDAQ:MSFT", "d": "Microsoft"},
-                {"s": "NYSE:PLTR", "d": "Palantir"},
-                {"s": "NYSE:SHOP", "d": "Shopify"}
-              ]
-            },
-            {
-              "title": "ETFs",
-              "symbols": [
-                {"s": "AMEX:SPY", "d": "S&P 500"},
-                {"s": "AMEX:QQQ", "d": "NASDAQ 100"},
-                {"s": "AMEX:IWM", "d": "Russell 2000"}
-              ]
-            }
+          "colorTheme":"dark","dateRange":"12M","showChart":true,"locale":"en","width":"100%","height":"500","largeChartUrl":"","isTransparent":false,
+          "tabs":[
+            {"title":"US Stocks","symbols":[{"s":"NASDAQ:AAPL","d":"Apple"},{"s":"NASDAQ:NVDA","d":"NVIDIA"},{"s":"NASDAQ:TSLA","d":"Tesla"},{"s":"NASDAQ:MSFT","d":"Microsoft"},{"s":"NYSE:PLTR","d":"Palantir"},{"s":"NYSE:SHOP","d":"Shopify"}]},
+            {"title":"ETFs","symbols":[{"s":"AMEX:SPY","d":"S&P 500"},{"s":"AMEX:QQQ","d":"NASDAQ 100"},{"s":"AMEX:IWM","d":"Russell 2000"}]}
           ]
         }
         </script>
@@ -147,20 +82,7 @@
       <div class="tradingview-widget-container">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-        {
-          "symbols": [
-            ["AMEX:SPY|1D"],
-            ["NASDAQ:QQQ|1D"],
-            ["AMEX:IWM|1D"]
-          ],
-          "chartOnly": false,
-          "width": "100%",
-          "height": "400",
-          "locale": "en",
-          "colorTheme": "dark",
-          "autosize": true,
-          "showVolume": true
-        }
+        {"symbols":[["AMEX:SPY|1D"],["NASDAQ:QQQ|1D"],["AMEX:IWM|1D"]],"chartOnly":false,"width":"100%","height":"400","locale":"en","colorTheme":"dark","autosize":true,"showVolume":true}
         </script>
       </div>
     </section>
@@ -171,15 +93,7 @@
       <div class="tradingview-widget-container" style="height:520px;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
-        {
-          "feedMode": "all_symbols",
-          "isTransparent": false,
-          "displayMode": "regular",
-          "width": "100%",
-          "height": "500",
-          "colorTheme": "dark",
-          "locale": "en"
-        }
+        {"feedMode":"all_symbols","isTransparent":false,"displayMode":"regular","width":"100%","height":"500","colorTheme":"dark","locale":"en"}
         </script>
       </div>
     </section>
@@ -190,14 +104,7 @@
       <div class="tradingview-widget-container" style="height:520px;">
         <div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-        {
-          "width": "100%",
-          "height": "500",
-          "locale": "en",
-          "importanceFilter": "-1,0,1",
-          "colorTheme": "dark",
-          "isTransparent": false
-        }
+        {"width":"100%","height":"500","locale":"en","importanceFilter":"-1,0,1","colorTheme":"dark","isTransparent":false}
         </script>
       </div>
     </section>
@@ -210,11 +117,11 @@
     </section>
   </main>
 
-  <!-- Auth gate + rogue overlay sweeper -->
   <script>
+    // Auth gate
     document.addEventListener('DOMContentLoaded', () => {
       const auth = firebase.auth();
-      auth.onAuthStateChanged((user) => {
+      auth.onAuthStateChanged(user => {
         const loading = document.getElementById('loading');
         const content = document.getElementById('content');
         if (!user) { window.location.replace('login.html'); return; }
@@ -226,28 +133,16 @@
     // Sweep any late-injected fullscreen dimmer
     window.addEventListener('load', () => {
       const sweep = () => {
-        const nearFull = n => {
-          const r = n.getBoundingClientRect();
-          return r.width >= innerWidth * 0.9 && r.height >= innerHeight * 0.9;
-        };
+        const nearFull = n => { const r = n.getBoundingClientRect(); return r.width >= innerWidth*0.9 && r.height >= innerHeight*0.9; };
         document.querySelectorAll('body *').forEach(n => {
-          const s = getComputedStyle(n);
+          const s = getComputedStyle(n), bg = s.backgroundColor || '';
           const fixed = s.position === 'fixed';
-          const bg = s.backgroundColor || '';
-          const semi = (s.opacity && parseFloat(s.opacity) < 1) ||
-                       (/rgba\(/.test(bg) && /, *0\.\d+\)/.test(bg));
-          if (fixed && nearFull(n) && semi) {
-            n.style.background = 'transparent';
-            n.style.opacity = '1';
-            n.style.filter = 'none';
-            n.style.pointerEvents = 'none';
-          }
+          const semi  = (s.opacity && parseFloat(s.opacity) < 1) || (/rgba\(/.test(bg) && /, *0\.\d+\)/.test(bg));
+          if (fixed && nearFull(n) && semi) { n.style.background='transparent'; n.style.opacity='1'; n.style.filter='none'; n.style.pointerEvents='none'; }
         });
       };
-      sweep();
-      setTimeout(sweep, 400);
+      sweep(); setTimeout(sweep, 400);
     });
   </script>
 </body>
 </html>
-
