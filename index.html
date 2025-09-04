@@ -73,7 +73,7 @@
         <ul>
           <li>Community chat & idea flow</li>
           <li>Basics & public announcements</li>
-          <li>Newsletter access</li>
+          <li>Getting-started resources</li>
         </ul>
         <a class="btn" id="joinDiscord2">Join Free on Discord</a>
       </div>
@@ -134,22 +134,17 @@
 
   <script>
     // ==== CONFIG: set your Discord invite ====
-    const DISCORD_INVITE_URL = "https://discord.gg/x2a3Gwdv"; // <-- REPLACE ME
+    const DISCORD_INVITE_URL = "https://discord.gg/ZNdm43HNft"; // <-- REPLACE ME
 
     // Wire up all discord join buttons
     const openDiscord = () => window.open(DISCORD_INVITE_URL, "_blank", "noopener");
     document.getElementById('joinDiscord').addEventListener('click', openDiscord);
     document.getElementById('joinDiscord2').addEventListener('click', openDiscord);
 
-    // Note: Old Pro click handlers removed; LaunchPass handles checkout via its embed script.
+    // Note: LaunchPass handles checkout via its embed script.
   </script>
 
-  <<script async src="https://www.launchpass.com/brokebull-investments/brokebull-investments/embed.js"></script>!-- ===== LaunchPass Embed Script =====
-       Paste the official script tag for embed ID/class `lp6042885453905920`
-       (from your LaunchPass dashboard) right below this comment. Example placeholder:
-       <script src="<!-- YOUR_LAUNCHPASS_EMBED_SCRIPT_URL --"></script>
-  ====================================== -->
-
+  <!-- LaunchPass Embed Script (required for the buttons above) -->
+  <script async src="https://www.launchpass.com/brokebull-investments/brokebull-investments/embed.js"></script>
 </body>
 </html>
-
