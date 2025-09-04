@@ -29,10 +29,28 @@
       <h1>Brick by Brick</h1>
       <p class="subtitle">Join the BrokeBull community on Discord.</p>
 
-      <!-- Primary CTAs: Discord-first -->
-      <nav class="auth-links">
+      <!-- Primary CTAs: Discord + LaunchPass -->
+      <nav class="auth-links" style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:center;">
         <a class="btn btn-primary" id="joinDiscord">Join Discord</a>
-        <a class="btn btn-outline" id="joinPro">Go Pro on Discord — $19/mo</a>
+
+        <!-- LaunchPass Pro (Monthly / Yearly) -->
+        <div class="lp-cta" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+          <button target="_blank"
+            style="font-family: sans-serif;
+            outline: none; display: block; height: 45px; width: 226px;
+            border-radius: 6px; background: #469CCE; color: white;
+            box-shadow: 1px 1px 3px 0 rgba(0,0,0,.03);
+            font-size: 18px; font-weight: 700; border: none; cursor: pointer;"
+            class="lp6042885453905920 lpbtn" monthly="true">Pay Monthly $19.00</button>
+
+          <button target="_blank"
+            style="font-family: sans-serif;
+            outline: none; display: block; height: 45px; width: 226px;
+            border-radius: 6px; background: #469CCE; color: white;
+            box-shadow: 1px 1px 3px 0 rgba(0,0,0,.03);
+            font-size: 18px; font-weight: 700; border: none; cursor: pointer;"
+            class="lp6042885453905920 lpbtn" yearly="true">Pay Yearly $190.00</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -67,8 +85,25 @@
           <li>Daily market notes & signals</li>
           <li>Weekly playbook + Q&A</li>
         </ul>
-        <!-- Calls upgradePro() if you keep Stripe. Otherwise this can be a Discord instructions link. -->
-        <a class="btn" id="joinPro2">Upgrade to Pro</a>
+
+        <!-- LaunchPass Pro (Monthly / Yearly) -->
+        <div class="lp-cta" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+          <button target="_blank"
+            style="font-family: sans-serif;
+            outline: none; display: block; height: 45px; width: 226px;
+            border-radius: 6px; background: #469CCE; color: white;
+            box-shadow: 1px 1px 3px 0 rgba(0,0,0,.03);
+            font-size: 18px; font-weight: 700; border: none; cursor: pointer;"
+            class="lp6042885453905920 lpbtn" monthly="true">Pay Monthly $19.00</button>
+
+          <button target="_blank"
+            style="font-family: sans-serif;
+            outline: none; display: block; height: 45px; width: 226px;
+            border-radius: 6px; background: #469CCE; color: white;
+            box-shadow: 1px 1px 3px 0 rgba(0,0,0,.03);
+            font-size: 18px; font-weight: 700; border: none; cursor: pointer;"
+            class="lp6042885453905920 lpbtn" yearly="true">Pay Yearly $190.00</button>
+        </div>
       </div>
     </div>
   </section>
@@ -105,28 +140,23 @@
   </section>
 
   <script>
-    // ==== CONFIG: set your Discord invite and (optional) Stripe flag ====
+    // ==== CONFIG: set your Discord invite ====
     const DISCORD_INVITE_URL = "https://discord.gg/AESypuFX"; // <-- REPLACE ME
-    const USE_STRIPE = false; // set true if/when you want Stripe Checkout from landing
 
     // Wire up all discord join buttons
     const openDiscord = () => window.open(DISCORD_INVITE_URL, "_blank", "noopener");
     document.getElementById('joinDiscord').addEventListener('click', openDiscord);
     document.getElementById('joinDiscord2').addEventListener('click', openDiscord);
 
-    // Pro button behavior
-    const handleProClick = () => {
-      if (!USE_STRIPE) {
-        // Option A: send to a Discord channel/instructions on how to verify Pro
-        openDiscord();
-      } else {
-        // Option B: trigger Stripe checkout (requires firebase.js + Cloud Functions)
-        if (typeof upgradePro === 'function') { upgradePro(); }
-        else { alert('Pro checkout not wired yet.'); }
-      }
-    };
-    document.getElementById('joinPro').addEventListener('click', handleProClick);
-    document.getElementById('joinPro2').addEventListener('click', handleProClick);
+    // Note: Old Pro click handlers removed; LaunchPass handles checkout via its embed script.
   </script>
+
+  <<script async src="https://www.launchpass.com/brokebull-investments/brokebull-investments/embed.js"></script>!-- ===== LaunchPass Embed Script =====
+       Paste the official script tag for embed ID/class `lp6042885453905920`
+       (from your LaunchPass dashboard) right below this comment. Example placeholder:
+       <script src="<!-- YOUR_LAUNCHPASS_EMBED_SCRIPT_URL --"></script>
+  ====================================== -->
+
 </body>
 </html>
+
