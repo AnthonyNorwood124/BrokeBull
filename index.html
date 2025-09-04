@@ -26,6 +26,12 @@
   <header class="hero">
     <div class="container hero-bar">
       <img class="logo logo--xl" src="images/logo.jpg" alt="BrokeBull logo">
+
+      <!-- New line added -->
+      <div class="brand-line" style="font-weight:800;font-size:clamp(2.4rem,6vw,3.2rem);margin:0 0 6px 0;">
+        BrokeBull Investments
+      </div>
+
       <h1>Brick by Brick</h1>
       <p class="subtitle">Join the BrokeBull community on Discord.</p>
 
@@ -52,10 +58,13 @@
             class="lp6042885453905920 lpbtn" yearly="true">Pay Yearly $190.00</button>
         </div>
       </nav>
+      <p class="microcopy" style="margin-top:8px;text-align:center;font-size:12px;opacity:.8">
+        Secure checkout via LaunchPass. Instant Discord access after payment.
+      </p>
     </div>
   </header>
 
-  <!-- WHAT WE DO (keep background vibe) -->
+  <!-- WHAT WE DO -->
   <section class="what-we-do" style="background-image:url('images/candlesticks.png'); background-size:cover; background-repeat:no-repeat;">
     <h2>What We Do</h2>
     <p>
@@ -83,7 +92,7 @@
         <ul>
           <li>Stage-2 Algo channels</li>
           <li>Daily market notes & signals</li>
-          <li>Weekly playbook + Q&A</li>
+          <li>Weekly playbook + Q&amp;A</li>
         </ul>
 
         <!-- LaunchPass Pro (Monthly / Yearly) -->
@@ -104,6 +113,9 @@
             font-size: 18px; font-weight: 700; border: none; cursor: pointer;"
             class="lp6042885453905920 lpbtn" yearly="true">Pay Yearly $190.00</button>
         </div>
+        <p class="microcopy" style="margin-top:8px;text-align:center;font-size:12px;opacity:.8">
+          Secure checkout via LaunchPass. Instant Discord access after payment.
+        </p>
       </div>
     </div>
   </section>
@@ -114,7 +126,7 @@
     <div class="testimonial-row">
       <div class="testimonial"><img src="images/testimonial1.png" alt="Mike"/><p>“Best investment insights I’ve ever received.” – Mike</p></div>
       <div class="testimonial"><img src="images/testimonial2.png" alt="Latoya"/><p>“The algo nailed 3 big moves in a row.” – Marcus</p></div>
-      <div class="testimonial"><img src="images/testimonial3.png" alt="Chris"/><p>“I’m finally confident in my stock picks.” – Latoya</p></div>
+      <div class="testimonial"><img src="images/testimonial3.png" alt="Chris"/><p>“I’m finally confident in my stock picks.” – LaToya</p></div>
       <div class="testimonial"><img src="images/testimonial4.png" alt="Janine"/><p>“The Pro tier is worth every dollar.” – Chris</p></div>
       <div class="testimonial"><img src="images/testimonial5.png" alt="Marcus"/><p>“Strong results, solid support.” – Janine</p></div>
     </div>
@@ -126,21 +138,29 @@
     <img src="founder.jpg" class="founder-photo" alt="Founder Photo" />
     <div class="founder-bio">
       <p>
-        Anthony Norwood is a veteran investor with a background in Cybersecurity and Military intelligence as an Army Targeteer.
+        Anthony Norwood is a veteran investor with a background in Cybersecurity and Military Intelligence as an Army Targeteer.
         The mission: simplify market success for everyday investors—brick by brick. The Discord is where it happens.
       </p>
     </div>
   </section>
 
+  <footer class="legal" style="max-width:960px;margin:48px auto 24px;padding:0 16px;text-align:center;font-size:12px;opacity:.75">
+    <p><strong>Educational only.</strong> BrokeBull Investments is not a broker-dealer or investment adviser.
+    Content is for informational purposes and is not investment advice. Markets carry risk. Do your own research.</p>
+    <p>© <span id="yy"></span> BrokeBull Investments</p>
+  </footer>
+
   <script>
     // ==== CONFIG: set your Discord invite ====
-    const DISCORD_INVITE_URL = "https://discord.gg/ZNdm43HNft"; // <-- REPLACE ME
+    const DISCORD_INVITE_URL = "https://discord.gg/x2a3Gwdv"; // <-- REPLACE ME
 
     // Wire up all discord join buttons
     const openDiscord = () => window.open(DISCORD_INVITE_URL, "_blank", "noopener");
     document.getElementById('joinDiscord').addEventListener('click', openDiscord);
     document.getElementById('joinDiscord2').addEventListener('click', openDiscord);
 
+    // Footer year
+    document.getElementById('yy').textContent = new Date().getFullYear();
     // Note: LaunchPass handles checkout via its embed script.
   </script>
 
